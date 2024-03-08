@@ -1,0 +1,42 @@
+[
+  {
+    "boardNo" : 1,
+    "boardIndent" : 0,
+    "boardTitle" : "1번글 입니다.",
+    "boardContent":  "1번글의 내용입니다.",
+    "userId" : "coco",
+    "boardDate" : "2024/02/21"
+  },
+  {
+    "boardNo" : 2,
+    "boardIndent" : 1,
+    "boardTitle" : "2번글 입니다.",
+    "boardContent":  "2번글의 내용입니다.",
+    "userId" : "mozzi",
+    "boardDate" : "2024/02/21"
+  },
+  {
+    "boardNo" : 3,
+    "boardIndent" : 0,
+    "boardTitle" : "3번글 입니다.",
+    "boardContent":  "3번글의 내용입니다.",
+    "userId" : "coco",
+    "boardDate" : "2024/02/21"
+  },
+  {
+    "boardNo" : 4,
+    "boardIndent" : 1,
+    "boardTitle" : "4번글 입니다.",
+    "boardContent":  "4번글의 내용입니다.",
+    "userId" : "coco",
+    "boardDate" : "2024/02/21"
+  },
+  {
+    "boardNo" : 5,
+    "boardIndent" : 2,
+    "boardTitle" : "5번글 입니다.",
+    "boardContent":  "5번글의 내용입니다.",
+    "userId" : "mozzi",
+    "boardDate" : "2024/02/21"
+  }
+]

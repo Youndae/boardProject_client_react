@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import {
+  BrowserRouter,
+    Routes,
+    Route
+} from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import BoardPage from "./component/page/board/BoardPage";
+import ImagePage from "./component/page/imageboard/ImagePage";
+import NavBar from "./component/ui/NavBar";
+import BoardDetailPage from "./component/page/board/BoardDetailPage";
+import BoardWritePage from "./component/page/board/BoardWritePage";
+import BoardUpdatePage from './component/page/board/BoardUpdatePage';
+import BoardReplyPage from "./component/page/board/BoardReplyPage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+        <NavBar />
+      <Routes>
+        <Route index element={<BoardPage />} />
+          <Route path="image-board-list" element={<ImagePage />}/>
+          <Route path="board/:boardNo" element={<BoardDetailPage />} />
+          <Route path="board/insert" element={<BoardWritePage />} />
+          <Route path="board/update/:boardNo" element={<BoardUpdatePage />} />
+          <Route path="board/reply/:boardNo" element={<BoardReplyPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
