@@ -4,8 +4,43 @@ import { useState } from "react";
 
 import Button from "../../ui/Button";
 
+const BoardWriteForm = (props) => {
+    const { data } = props;
+    const [values, setValues] = useState({
+        title: data == null ? "" : data.boardTitle,
+        content: data == null ? "" : data.boardContent,
+    });
 
-function BoardWriteForm(props) {
+    const handleChange = (e) => {
+        setValues({
+            ...values,
+            [e.target.name]: e.target.value,
+        })
+    };
+
+    const submitEvent = () => {
+        props.handleData(values);
+    }
+
+    return (
+        <>
+            <div>
+                <label>제목</label>
+                <input type="text" placeholder="제목을 입력하세요" name="title" value={values.title} onChange={handleChange}/>
+            </div>
+            <div className="mb-4">
+                <label>내용</label>
+                <textarea placeholder="내용을 입력하세요" name="content" value={values.content} onChange={handleChange}>{values.content}</textarea>
+            </div>
+            <Button
+                btnText="등록" onClick={submitEvent}
+            />
+        </>
+    );
+}
+
+
+/*function BoardWriteForm(props) {
     const { data } = props;
 
     const [values, setValues] = useState({
@@ -40,7 +75,7 @@ function BoardWriteForm(props) {
         console.log('set text val : ' + textVal);
     }
 
-    /*function ValueInput(props) {
+    /!*function ValueInput(props) {
         const { value } = props;
 
         return <input type="text" placeholder="제목을 입력하세요" value={value} onChange={handleChangeInput}/>;
@@ -58,7 +93,7 @@ function BoardWriteForm(props) {
 
     function DefaultTextarea() {
         return <textarea placeholder="내용을 입력하세요" onChange={handleChangeText}></textarea>;
-    }*/
+    }*!/
 
     // let input = <DefaultInput />;
     // let textarea = <DefaultTextarea />;
@@ -66,8 +101,8 @@ function BoardWriteForm(props) {
     let onClickBtn = '/board/insertProc';
 
     if(data !== undefined) {
-        /*input = <ValueInput value={data.boardTitle}/>;
-        textarea = <ValueTextarea value={data.boardContent}/>;*/
+        /!*input = <ValueInput value={data.boardTitle}/>;
+        textarea = <ValueTextarea value={data.boardContent}/>;*!/
         setInputVal(data.boardTitle);
         setTextVal(data.boardContent);
 
@@ -83,7 +118,7 @@ function BoardWriteForm(props) {
     const submitEvent = () => {
         console.log("input : ", values.title);
         console.log("text : ", values.content);
-        props.propFunction(values);
+        props.getFormData(values);
     }
 
 
@@ -103,6 +138,6 @@ function BoardWriteForm(props) {
         </>
     );
 
-}
+}*/
 
 export default BoardWriteForm;

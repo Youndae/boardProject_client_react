@@ -1,16 +1,37 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 
 import Button from "../../ui/Button";
 
 function BoardDetailForm (props) {
     const { boardInfo } = props;
 
+    const navigate = useNavigate();
+
     return (
         <div>
-            <Button
-                btnText="답글"
-                btnDivClassName="form-row float-right mb-3"
-            />
+            <div className="form-row float-right mb-3">
+                <Button
+                    btnText="답글"
+                    btnDivClassName="form-row float-right mb-3"
+                    onClick={() => {
+                        navigate(`/board/reply/${boardInfo.boardNo}`)
+                    }}
+                />
+                <Button
+                    btnText="수정"
+                    onClick={() => {
+                        navigate(`/board/update/${boardInfo.boardNo}`)
+                    }}
+                />
+                <Button
+                    btnText="삭제"
+                    onClick={() => {
+                        navigate(`/board/delete/${boardInfo.boardNo}`)
+                    }}
+                />
+            </div>
+
             <div className="form-group">
                 <label>제목</label>
                 <p>{boardInfo.boardTitle}</p>

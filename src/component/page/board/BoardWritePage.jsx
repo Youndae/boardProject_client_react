@@ -7,7 +7,8 @@ function BoardWritePage (props) {
     function handleSubmit(e) {
         e.preventDefault();
 
-        const { inputVal, textVal } = e.props;
+        console.log("handleSubmit");
+        /*const { inputVal, textVal } = e.props;
         console.log("submit!!");
 
         const title2 = inputVal;
@@ -15,18 +16,19 @@ function BoardWritePage (props) {
 
         // const content2 = e.target.children.textarea.value();
         const content2 = textVal;
-        console.log('content2 : ' + content2);
+        console.log('content2 : ' + content2);*/
     }
 
-    const dataFunction = (inputVal) => {
-        const values = inputVal;
-        console.log('dataFunction inputVal : ', values);
+    const handleData = (values) => {
+        console.log("title : ", values.title);
+        console.log("content : ", values.content);
+
     }
 
     return (
         <div className="container">
-            <form onSubmit={handleSubmit} propFunction={dataFunction}>
-                <BoardWriteForm />
+            <form onSubmit={handleSubmit}>
+                <BoardWriteForm handleData={handleData} />
             </form>
         </div>
     );

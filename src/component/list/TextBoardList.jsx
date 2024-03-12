@@ -16,13 +16,14 @@ function TextBoardList(props) {
 
     return (
         <Wrapper>
-            <Button
-                btnText="글작성"
-                btnDivClassName="mb-4"
-                onClick={() => {
-                    onClickBtn();
-                }}
-            />
+            <div className="form-row float-right mb-1">
+                <Button
+                    btnText="글작성"
+                    onClick={() => {
+                        onClickBtn();
+                    }}
+                />
+            </div>
             <table className="table table-hover">
                 <tr>
                     <th>글번호</th>

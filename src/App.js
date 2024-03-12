@@ -13,6 +13,7 @@ import BoardDetailPage from "./component/page/board/BoardDetailPage";
 import BoardWritePage from "./component/page/board/BoardWritePage";
 import BoardUpdatePage from './component/page/board/BoardUpdatePage';
 import BoardReplyPage from "./component/page/board/BoardReplyPage";
+import ImageWritePage from "./component/page/imageboard/ImageWritePage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="board/insert" element={<BoardWritePage />} />
           <Route path="board/update/:boardNo" element={<BoardUpdatePage />} />
           <Route path="board/reply/:boardNo" element={<BoardReplyPage />} />
+          <Route path="image/insert" element={<ImageWritePage />} />
       </Routes>
     </BrowserRouter>
   );
