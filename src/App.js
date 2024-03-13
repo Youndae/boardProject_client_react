@@ -14,7 +14,8 @@ import BoardWritePage from "./component/page/board/BoardWritePage";
 import BoardUpdatePage from './component/page/board/BoardUpdatePage';
 import BoardReplyPage from "./component/page/board/BoardReplyPage";
 import ImageWritePage from "./component/page/imageboard/ImageWritePage";
-
+import ImageUpdatePage from "./component/page/imageboard/ImageUpdatePage";
+import ImageDetailPage from "./component/page/imageboard/ImageDetailPage";
 function App() {
   return (
     <BrowserRouter>
@@ -27,6 +28,8 @@ function App() {
           <Route path="board/update/:boardNo" element={<BoardUpdatePage />} />
           <Route path="board/reply/:boardNo" element={<BoardReplyPage />} />
           <Route path="image/insert" element={<ImageWritePage />} />
+          <Route path="image/update/:imageNo" element={<ImageUpdatePage />}/>
+          <Route path="image/:imageNo" element={<ImageDetailPage />}/>
       </Routes>
     </BrowserRouter>
   );

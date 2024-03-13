@@ -1,12 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useState } from "react";
-
-import Button from "../../ui/Button";
 
 const BoardWriteForm = (props) => {
-    const { data } = props;
-    const [values, setValues] = useState({
+    const { values, handleChange } = props;
+    /*const [values, setValues] = useState({
         title: data == null ? "" : data.boardTitle,
         content: data == null ? "" : data.boardContent,
     });
@@ -16,11 +13,7 @@ const BoardWriteForm = (props) => {
             ...values,
             [e.target.name]: e.target.value,
         })
-    };
-
-    const submitEvent = () => {
-        props.handleData(values);
-    }
+    };*/
 
     return (
         <>
@@ -32,9 +25,6 @@ const BoardWriteForm = (props) => {
                 <label>내용</label>
                 <textarea placeholder="내용을 입력하세요" name="content" value={values.content} onChange={handleChange}>{values.content}</textarea>
             </div>
-            <Button
-                btnText="등록" onClick={submitEvent}
-            />
         </>
     );
 }

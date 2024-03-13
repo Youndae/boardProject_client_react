@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import BoardWriteForm from './BoardWriteForm';
+import Button from "../../ui/Button";
 
 function BoardWritePage (props) {
 
@@ -8,6 +9,8 @@ function BoardWritePage (props) {
         e.preventDefault();
 
         console.log("handleSubmit");
+        console.log("values.title : ", values.title);
+        console.log("values.content: ", values.content);
         /*const { inputVal, textVal } = e.props;
         console.log("submit!!");
 
@@ -19,16 +22,27 @@ function BoardWritePage (props) {
         console.log('content2 : ' + content2);*/
     }
 
-    const handleData = (values) => {
-        console.log("title : ", values.title);
-        console.log("content : ", values.content);
+    const [values, setValues] = useState({
+        title: "",
+        content: "",
+    });
 
-    }
+    const handleChange = (e) => {
+        setValues({
+            ...values,
+            [e.target.name]: e.target.value,
+        })
+    };
+
+
 
     return (
         <div className="container">
             <form onSubmit={handleSubmit}>
-                <BoardWriteForm handleData={handleData} />
+                <BoardWriteForm values={values} handleChange={handleChange} />
+                <Button
+                    btnText="등록"
+                />
             </form>
         </div>
     );
