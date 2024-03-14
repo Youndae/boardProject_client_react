@@ -5,8 +5,15 @@ import Button from "../../ui/Button";
 
 function BoardDetailForm (props) {
     const { boardInfo } = props;
-
     const navigate = useNavigate();
+    // console.log('boardInfo : ', boardInfo);
+
+    /*const date = new Date(boardInfo.boardDate);
+    const formatDate = new Intl.DateTimeFormat('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    }).format(date);*/
 
     return (
         <div>

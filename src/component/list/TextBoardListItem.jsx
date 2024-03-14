@@ -23,8 +23,9 @@ const TrWrapper = styled.tr`
 
 function TextBoardListItem(props) {
     const {board, onClick} = props;
-    let title_indent;
 
+
+    let title_indent;
     if(board.boardIndent === 0)
         title_indent = 'title_indent_0';
     else if(board.boardIndent === 1)
@@ -36,6 +37,13 @@ function TextBoardListItem(props) {
     else if(board.boardIndent === 4)
         title_indent = 'title_indent_4';
 
+    const date = new Date(board.boardDate);
+    const formatDate = new Intl.DateTimeFormat('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    }).format(date);
+
     return (
         <tr>
             <td>{board.boardNo}</td>
@@ -45,7 +53,7 @@ function TextBoardListItem(props) {
                 </TitleWrapper>
             </td>
             <td>{board.userId}</td>
-            <td>{board.boardDate}</td>
+            <td>{formatDate}</td>
         </tr>
     );
 }

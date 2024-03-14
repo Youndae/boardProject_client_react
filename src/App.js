@@ -16,20 +16,25 @@ import BoardReplyPage from "./component/page/board/BoardReplyPage";
 import ImageWritePage from "./component/page/imageboard/ImageWritePage";
 import ImageUpdatePage from "./component/page/imageboard/ImageUpdatePage";
 import ImageDetailPage from "./component/page/imageboard/ImageDetailPage";
+import Join from './component/page/member/Join';
+import Login from './component/page/member/Login';
+
 function App() {
   return (
     <BrowserRouter>
         <NavBar />
       <Routes>
         <Route index element={<BoardPage />} />
-          <Route path="image-board-list" element={<ImagePage />}/>
-          <Route path="board/:boardNo" element={<BoardDetailPage />} />
-          <Route path="board/insert" element={<BoardWritePage />} />
-          <Route path="board/update/:boardNo" element={<BoardUpdatePage />} />
-          <Route path="board/reply/:boardNo" element={<BoardReplyPage />} />
-          <Route path="image/insert" element={<ImageWritePage />} />
-          <Route path="image/update/:imageNo" element={<ImageUpdatePage />}/>
-          <Route path="image/:imageNo" element={<ImageDetailPage />}/>
+        <Route path="image-board-list" element={<ImagePage />}/>
+        <Route path="board/:boardNo" element={<BoardDetailPage />} />
+        <Route path="board/insert" element={<BoardWritePage />} />
+        <Route path="board/update/:boardNo" element={<BoardUpdatePage />} />
+        <Route path="board/reply/:boardNo" element={<BoardReplyPage />} />
+        <Route path="image/insert" element={<ImageWritePage />} />
+        <Route path="image/update/:imageNo" element={<ImageUpdatePage />}/>
+        <Route path="image/:imageNo" element={<ImageDetailPage />}/>
+        <Route path="join" element={<Join />}/>
+        <Route path="login" element={<Login />}/>
       </Routes>
     </BrowserRouter>
   );

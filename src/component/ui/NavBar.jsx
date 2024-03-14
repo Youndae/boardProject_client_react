@@ -23,7 +23,7 @@ function NavBar (props) {
                             <li className="nav-item active">
                                 <a className="nav-link" onClick={() => navigate("/image-board-list")}>
                                     사진
-                                    <span class="sr-only"></span>
+                                    <span className="sr-only"></span>
                                 </a>
                             </li>
                             <li className="nav-item">

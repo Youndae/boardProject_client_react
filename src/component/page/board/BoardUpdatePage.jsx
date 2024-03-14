@@ -1,21 +1,33 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useParams } from "react-router-dom";
 
 import BoardWriteForm from "./BoardWriteForm";
 import Button from "../../ui/Button";
+import axios from "axios";
 
 import data from '../../../data.json';
 
 function BoardUpdatePage(props) {
     const { boardNo } = useParams();
+    const [data, setData] = useState({});
 
-    const board = data.find((item) => {
-        return item.boardNo == boardNo;
-    });
+    const updateData = async (boardNo) => {
+        try{
+            const response = await axios.get(`http://localhost:9096/board/board-modify/${boardNo}`);
+
+            setData(response.data);
+        }catch (err) {
+            console.error('axios err : ', err);
+        }
+    }
+
+    useEffect(() => {
+        updateData(boardNo);
+    })
 
     const [values, setValues] = useState({
-        title: board.boardTitle,
-        content: board.boardContent,
+        title: data.boardTitle,
+        content: data.boardContent,
     })
 
     const handleChange = (e) => {
