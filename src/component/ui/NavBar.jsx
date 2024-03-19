@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import {useDispatch, useSelector} from "react-redux";
+
+import store from '../../index';
 
 const Wrapper = styled.div`
     li {
@@ -10,9 +13,43 @@ const Wrapper = styled.div`
     }
 `;
 
-function NavBar (props) {
+function NavBar () {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const LogoutSubmit = (e) => {
+        console.log('logout Submit');
+        const body = {
+            type: 'DELETE_USER',
+            data: undefined,
+        }
+        dispatch(body);
+
+    }
+
+    function LoggedInState() {
+        const { uid } = useSelector(state => state.user);
+        const uid2 = store.getState().user.user;
+
+        console.log('userId : ', uid2);
+
+        console.log('state uid : ', uid);
+
+        if(uid2 === undefined){
+            return (
+                <ul>
+                    <button className="user_status_btn">로그인</button>
+                </ul>
+            )
+        }else {
+            return (
+                <ul>
+                    <button className="user_status_btn" onClick={LogoutSubmit}>{uid2} : 로그아웃</button>
+                </ul>
+            )
+        }
+    }
 
     return (
         <Wrapper>
@@ -33,9 +70,7 @@ function NavBar (props) {
                             </li>
                         </ul>
                         <div className="form-inline my-2 my-md-0 login">
-                            <ul>
-
-                            </ul>
+                            <LoggedInState />
                         </div>
                     </div>
                 </nav>

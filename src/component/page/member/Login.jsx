@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import { useCookies } from 'react-cookie';
 
 import Button from "../../ui/Button";
+import {useDispatch} from "react-redux";
 
 function Login(props) {
     const [values, setValues] = useState({
@@ -11,6 +13,7 @@ function Login(props) {
         userPw: "",
     });
 
+    const [cookies, setCookie, removeCookie] = useCookies(['Authorization', 'Authorization_ino', 'Authorization_refresh']);
 
     /*
         id : id 미입력
@@ -20,6 +23,7 @@ function Login(props) {
     const [responseStatus, setResponseStatus] = useState('');
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleChange = (e) => {
         setValues({
@@ -39,7 +43,71 @@ function Login(props) {
             setResponseStatus('pw');
         }else{
             //axios.post(login)
-            setResponseStatus('fail');
+
+            let response;
+
+            let form = new FormData();
+            form.append('userId', values.userId);
+            form.append('userPw', values.userPw);
+            console.log('id, pw : ', values.userId[0], values.userPw[0]);
+            console.log('form : ', form);
+
+            const data = {
+                userId: values.userId[0],
+                userPw: values.userPw[0],
+            };
+
+            response = axios.post('http://localhost:9096/member/login',
+                data)
+                .then(res => {
+                    console.log('res : ', res.data);
+                    console.log('at header value : ', res.data.accessTokenHeader, res.data.accessTokenValue);
+                    setCookie(res.data.accessTokenHeader, res.data.accessTokenValue);
+                    setCookie(res.data.refreshTokenHeader, res.data.refreshTokenValue);
+                    setCookie(res.data.inoHeader, res.data.inoValue);
+
+                })
+                .catch(err => {
+                    const statusCode = err.response.status;
+
+                    if(statusCode === 403)
+                        setResponseStatus('fail');
+                    else
+                        alert('오류가 발생했습니다.\n문제가 계속된다면 관리자에게 문의해주세요');
+                });
+
+            /*if(cookies.Authorization_ino == undefined){
+                response = axios.post('http://localhost:9096/member/login', {
+                    headers: {
+                        'Content-type': 'application/x-www-form-urlencoded',
+                    },
+                    userId: values.userId,
+                    userPw: values.userPw
+                });
+            }else {
+                response = axios.post('http://localhost:9096/member/login', form, {
+                    headers: {
+                        Cookie: `Authorization_ino=${cookies.Authorization_ino}`
+                    }
+                })
+            }*/
+
+            console.log('login response : ', response);
+
+            console.log('valid id and pw');
+            /*const uid = 'coco';
+
+            const body = {
+                type: 'SET_USER',
+                data: uid,
+            }
+
+            dispatch(body);
+            // eslint-disable-next-line no-restricted-globals
+            location.href='/login';*/
+
+            // setResponseStatus('fail');
+            console.log('login Success. check your state');
         }
 
         console.log('handleSubmit');
