@@ -7,6 +7,8 @@ import { useCookies } from 'react-cookie';
 import Button from "../../ui/Button";
 import {useDispatch} from "react-redux";
 
+axios.defaults.withCredentials = true;
+
 function Login(props) {
     const [values, setValues] = useState({
         userId: "",
@@ -57,17 +59,28 @@ function Login(props) {
                 userPw: values.userPw[0],
             };
 
+            console.log('ino : ', cookies);
+
             response = axios.post('http://localhost:9096/member/login',
-                data)
+                data, {withCredentials: true})
                 .then(res => {
-                    console.log('res : ', res.data);
-                    console.log('at header value : ', res.data.accessTokenHeader, res.data.accessTokenValue);
-                    setCookie(res.data.accessTokenHeader, res.data.accessTokenValue);
-                    setCookie(res.data.refreshTokenHeader, res.data.refreshTokenValue);
-                    setCookie(res.data.inoHeader, res.data.inoValue);
+                    console.log('res : ', res);
+                    console.log('res.data : ', res.data);
+                    console.log('res.headers : ', res.headers["set-cookie"]);
+
+                    const body = {
+                        type: 'SET_USER',
+                        data: values.userId[0],
+                    }
+
+                    dispatch(body);
+                    // eslint-disable-next-line no-restricted-globals
+                    location.href='/';
 
                 })
                 .catch(err => {
+                    console.error('axios error : ', err);
+
                     const statusCode = err.response.status;
 
                     if(statusCode === 403)
@@ -91,26 +104,7 @@ function Login(props) {
                     }
                 })
             }*/
-
-            console.log('login response : ', response);
-
-            console.log('valid id and pw');
-            /*const uid = 'coco';
-
-            const body = {
-                type: 'SET_USER',
-                data: uid,
-            }
-
-            dispatch(body);
-            // eslint-disable-next-line no-restricted-globals
-            location.href='/login';*/
-
-            // setResponseStatus('fail');
-            console.log('login Success. check your state');
         }
-
-        console.log('handleSubmit');
     }
 
     return (

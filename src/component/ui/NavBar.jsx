@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
+// import {useCookies} from "react-cookie";
+import axios from "axios";
 
 import store from '../../index';
 
@@ -17,6 +19,7 @@ function NavBar () {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    // const [cookies, setCookie, removeCookie] = useCookies(['Authorization', 'Authorization_ino', 'Authorization_refresh']);
 
     const LogoutSubmit = (e) => {
         console.log('logout Submit');
@@ -26,26 +29,37 @@ function NavBar () {
         }
         dispatch(body);
 
+        axios.post('http://localhost:9096/member/logout'
+        , {}, {withCredentials: true})
+            .then(res => {
+                console.log('res.headers : ', res.headers["set-cookie"]);
+                // eslint-disable-next-line no-restricted-globals
+                location.href = '/';
+            })
+            .catch(err => {
+                console.error('axios err : ', err);
+            })
+
     }
 
-    function LoggedInState() {
-        const { uid } = useSelector(state => state.user);
+    function LoggedInState(props) {
+        // const { uid } = useSelector(state => state.user);
         const uid2 = store.getState().user.user;
 
-        console.log('userId : ', uid2);
+        const { onClickLogin } = props;
 
-        console.log('state uid : ', uid);
+        console.log('userId : ', uid2);
 
         if(uid2 === undefined){
             return (
                 <ul>
-                    <button className="user_status_btn">로그인</button>
+                    <button className="user_status_btn" onClick={() => onClickLogin()}>로그인</button>
                 </ul>
             )
         }else {
             return (
                 <ul>
-                    <button className="user_status_btn" onClick={LogoutSubmit}>{uid2} : 로그아웃</button>
+                    <button className="user_status_btn" onClick={LogoutSubmit}>로그아웃</button>
                 </ul>
             )
         }
@@ -70,7 +84,9 @@ function NavBar () {
                             </li>
                         </ul>
                         <div className="form-inline my-2 my-md-0 login">
-                            <LoggedInState />
+                            <LoggedInState
+                                onClickLogin={() => {navigate('/login')}}
+                            />
                         </div>
                     </div>
                 </nav>
