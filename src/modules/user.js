@@ -6,7 +6,7 @@
 
 //action type
 const SET_USER = 'SET_USER';
-const DELETE_USER = 'DELETE_USER';
+// const DELETE_USER = 'DELETE_USER';
 
 //action function
 // export const getToken = data => ({ type: SET_USER, data });
@@ -21,11 +21,11 @@ export default function user(state = {}, action) {
                 ...state,
                 user : action.data,
             }
-        case DELETE_USER:
+        /*case DELETE_USER:
             return {
                 ...state,
                 user: action.data,
-            }
+            }*/
         default:
             return state;
     }

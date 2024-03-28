@@ -61,21 +61,20 @@ function Login(props) {
 
             console.log('ino : ', cookies);
 
-            response = axios.post('http://localhost:9096/member/login',
+            response = axios.post('http://localhost:9096/member/login2',
                 data, {withCredentials: true})
                 .then(res => {
                     console.log('res : ', res);
                     console.log('res.data : ', res.data);
-                    console.log('res.headers : ', res.headers["set-cookie"]);
+                    // console.log('res.headers : ', res.headers["set-cookie"]);
 
                     const body = {
-                        type: 'SET_USER',
-                        data: values.userId[0],
+                        type: 'isLoggedIn'
                     }
 
                     dispatch(body);
                     // eslint-disable-next-line no-restricted-globals
-                    location.href='/';
+                    // location.href='/';
 
                 })
                 .catch(err => {

@@ -3,25 +3,40 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createStore } from 'redux';
+import { legacy_createStore as createStore } from 'redux';
 import { Provider } from 'react-redux';
-import rootReducer from './modules';
-import { persistStore } from "redux-persist";
-import { PersistGate } from 'redux-persist/integration/react';
+// import rootReducer from './modules';
+// import { persistStore } from "redux-persist";
+// import { PersistGate } from 'redux-persist/integration/react';
 import { CookiesProvider } from 'react-cookie';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const store = createStore(rootReducer);
-const persistor = persistStore(store);
+// const store = createStore(rootReducer);
+// const persistor = persistStore(store);
+
+const isLoggedIn = false;
+
+const reducer = (state = isLoggedIn, action) => {
+    switch (action.type) {
+        case "isLoggedIn":
+            return state = true;
+        case "isLoggedOut":
+            return state = false;
+        default:
+            return state;
+    }
+}
+
+const store = createStore(reducer);
 
 
 root.render(
   <React.StrictMode>
       <CookiesProvider>
           <Provider store={store}>
-              <PersistGate persistor={persistor}>
+              {/*<PersistGate persistor={persistor}>*/}
                   <App />
-              </PersistGate>
+              {/*</PersistGate>*/}
           </Provider>
       </CookiesProvider>
   </React.StrictMode>

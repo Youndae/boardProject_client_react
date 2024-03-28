@@ -21,6 +21,9 @@ function NavBar () {
     const dispatch = useDispatch();
     // const [cookies, setCookie, removeCookie] = useCookies(['Authorization', 'Authorization_ino', 'Authorization_refresh']);
 
+    const loginState = useSelector((state) => state);
+    console.log('loginState : ', loginState);
+
     const LogoutSubmit = (e) => {
         console.log('logout Submit');
         const body = {
@@ -44,13 +47,26 @@ function NavBar () {
 
     function LoggedInState(props) {
         // const { uid } = useSelector(state => state.user);
-        const uid2 = store.getState().user.user;
+        // const uid2 = store.getState().user.user;
 
         const { onClickLogin } = props;
 
-        console.log('userId : ', uid2);
+        // console.log('userId : ', uid2);
 
-        if(uid2 === undefined){
+        /*if(uid2 === undefined){
+            return (
+                <ul>
+                    <button className="user_status_btn" onClick={() => onClickLogin()}>로그인</button>
+                </ul>
+            )
+        }else {
+            return (
+                <ul>
+                    <button className="user_status_btn" onClick={LogoutSubmit}>로그아웃</button>
+                </ul>
+            )
+        }*/
+        if(loginState === false){
             return (
                 <ul>
                     <button className="user_status_btn" onClick={() => onClickLogin()}>로그인</button>
