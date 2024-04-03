@@ -1,11 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
-// import {useCookies} from "react-cookie";
-import axios from "axios";
-
-import store from '../../index';
+import {customAxios} from "../../modules/customAxios";
 
 const Wrapper = styled.div`
     li {
@@ -15,57 +12,61 @@ const Wrapper = styled.div`
     }
 `;
 
-function NavBar () {
+const member_default = process.env.REACT_APP_API_MEMBER;
 
+function NavBar () {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    // const [cookies, setCookie, removeCookie] = useCookies(['Authorization', 'Authorization_ino', 'Authorization_refresh']);
 
-    const loginState = useSelector((state) => state);
-    console.log('loginState : ', loginState);
+    useEffect(() => {
+        checkLoggedIn();
+    }, []);
+
+    const checkLoggedIn = async () => {
+        await customAxios.get(`${member_default}check-login`)
+            .then(res => {
+                let dispatchType;
+                const status = res.data.loginStatus;
+                if(status == true)
+                    dispatchType = 'isLoggedIn';
+                else if(status == false)
+                    dispatchType = 'isLoggedOut';
+
+                const body = {
+                    type: dispatchType,
+                }
+
+                dispatch(body);
+            })
+            .catch(err => {
+                console.error('loginStatue error : ', err);
+            })
+    };
 
     const LogoutSubmit = (e) => {
         console.log('logout Submit');
         const body = {
-            type: 'DELETE_USER',
-            data: undefined,
+            type: 'isLoggedOut',
         }
+
         dispatch(body);
 
-        axios.post('http://localhost:9096/member/logout'
-        , {}, {withCredentials: true})
+        customAxios.post(`${member_default}logout`)
             .then(res => {
-                console.log('res.headers : ', res.headers["set-cookie"]);
                 // eslint-disable-next-line no-restricted-globals
                 location.href = '/';
             })
             .catch(err => {
-                console.error('axios err : ', err);
+                console.error('logoutError : ', err);
             })
 
     }
 
     function LoggedInState(props) {
-        // const { uid } = useSelector(state => state.user);
-        // const uid2 = store.getState().user.user;
+        const loginState = useSelector((state) => state);
 
+        console.log('loginState : ', loginState);
         const { onClickLogin } = props;
-
-        // console.log('userId : ', uid2);
-
-        /*if(uid2 === undefined){
-            return (
-                <ul>
-                    <button className="user_status_btn" onClick={() => onClickLogin()}>로그인</button>
-                </ul>
-            )
-        }else {
-            return (
-                <ul>
-                    <button className="user_status_btn" onClick={LogoutSubmit}>로그아웃</button>
-                </ul>
-            )
-        }*/
         if(loginState === false){
             return (
                 <ul>

@@ -4,6 +4,7 @@ import {
     Routes,
     Route
 } from "react-router-dom";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import BoardPage from "./component/page/board/BoardPage";
@@ -18,6 +19,7 @@ import ImageUpdatePage from "./component/page/imageboard/ImageUpdatePage";
 import ImageDetailPage from "./component/page/imageboard/ImageDetailPage";
 import Join from './component/page/member/Join';
 import Login from './component/page/member/Login';
+
 
 function App() {
   return (

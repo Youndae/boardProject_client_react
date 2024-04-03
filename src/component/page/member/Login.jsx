@@ -1,21 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-import { useCookies } from 'react-cookie';
+import {customAxios} from "../../../modules/customAxios";
+import {useDispatch, useSelector} from "react-redux";
+
 
 import Button from "../../ui/Button";
-import {useDispatch} from "react-redux";
+
 
 axios.defaults.withCredentials = true;
+
+const member_default = process.env.REACT_APP_API_MEMBER;
 
 function Login(props) {
     const [values, setValues] = useState({
         userId: "",
         userPw: "",
     });
+    const isLoggedIn = useSelector(state => state);
 
-    const [cookies, setCookie, removeCookie] = useCookies(['Authorization', 'Authorization_ino', 'Authorization_refresh']);
+    // const [cookies, setCookie, removeCookie] = useCookies(['Authorization', 'Authorization_ino', 'Authorization_refresh']);
 
     /*
         id : id 미입력
@@ -27,6 +32,11 @@ function Login(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if(isLoggedIn)
+            navigate(`/`);
+    })
+
     const handleChange = (e) => {
         setValues({
             ...values,
@@ -34,8 +44,12 @@ function Login(props) {
         });
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleKeyPress = (e) => {
+        if(e.key === 'Enter')
+            handleSubmit();
+    }
+
+    const handleSubmit = async (e) => {
 
         if(values.userId == '') {
             console.log("userId == blank");
@@ -59,9 +73,31 @@ function Login(props) {
                 userPw: values.userPw[0],
             };
 
-            console.log('ino : ', cookies);
+            await customAxios.post(`${member_default}login`, data)
+                .then(res => {
+                    console.log('res : ', res);
+                    console.log('res.data : ', res.data);
+                    const body = {
+                        type: 'isLoggedIn',
+                    }
 
-            response = axios.post('http://localhost:9096/member/login2',
+                    dispatch(body);
+
+                    // eslint-disable-next-line no-restricted-globals
+                    location.href='/';
+                })
+                .catch(err => {
+                    console.error('axios error : ', err);
+
+                    const statusCode = err.response.status;
+
+                    if(statusCode === 403)
+                        setResponseStatus('fail');
+                })
+
+
+
+            /*response = await axios.post('http://localhost:9096/member/login2',
                 data, {withCredentials: true})
                 .then(res => {
                     console.log('res : ', res);
@@ -86,7 +122,7 @@ function Login(props) {
                         setResponseStatus('fail');
                     else
                         alert('오류가 발생했습니다.\n문제가 계속된다면 관리자에게 문의해주세요');
-                });
+                });*/
 
             /*if(cookies.Authorization_ino == undefined){
                 response = axios.post('http://localhost:9096/member/login', {
@@ -118,6 +154,7 @@ function Login(props) {
                         placeholder={"아이디"}
                         className={"form-control"}
                         onChange={handleChange}
+                        onKeyUp={handleKeyPress}
                         required autoFocus
                     />
                 </div>
@@ -129,6 +166,7 @@ function Login(props) {
                         placeholder={"비밀번호"}
                         className={"form-control"}
                         onChange={handleChange}
+                        onKeyUp={handleKeyPress}
                         required
                     />
                 </div>

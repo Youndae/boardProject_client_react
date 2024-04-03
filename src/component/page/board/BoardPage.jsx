@@ -5,10 +5,9 @@ import {customAxios} from "../../../modules/customAxios";
 import TextBoardList from '../../list/TextBoardList';
 
 
-const default_url = process.env.REACT_APP_API_URL;
+const default_url = process.env.REACT_APP_API_BOARD;
 
 function BoardPage(props) {
-    console.log('default url : ', default_url);
     const {} = props;
     const [data, setData] = useState([]);
     const [pageNum, setPageNum] = useState(1);
@@ -17,9 +16,7 @@ function BoardPage(props) {
 
     const getBoardList = async (pageNum) => {
         try{
-            const response = await customAxios.get(`/board/board-list?pageNum=${pageNum}`);
-
-            console.log('boardPage res.data : ', response.data);
+            const response = await customAxios.get(`${default_url}?pageNum=${pageNum}`);
 
             setData(response.data.content);
         }catch(err) {

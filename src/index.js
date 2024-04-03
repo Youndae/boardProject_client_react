@@ -10,20 +10,25 @@ import { Provider } from 'react-redux';
 // import { PersistGate } from 'redux-persist/integration/react';
 import { CookiesProvider } from 'react-cookie';
 
+import dayjs from "dayjs";
+import isLeapYear from 'dayjs/plugin/isLeapYear';
+import 'dayjs/locale/ko';
+
+dayjs.extend(isLeapYear);
+dayjs.locale('ko');
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 // const store = createStore(rootReducer);
 // const persistor = persistStore(store);
 
-const isLoggedIn = false;
-
-const reducer = (state = isLoggedIn, action) => {
+const reducer = (state = false, action) => {
     switch (action.type) {
         case "isLoggedIn":
             return state = true;
         case "isLoggedOut":
             return state = false;
         default:
-            return state;
+            return state = false;
     }
 }
 

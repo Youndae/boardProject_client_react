@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 import BoardWriteForm from "../board/BoardWriteForm";
 import Button from "../../ui/Button"
@@ -8,6 +10,13 @@ function ImageWritePage(props) {
        title: "",
        content: "",
     });
+    const navigate = useNavigate();
+    const isLoggedIn = useSelector(state => state);
+
+    useEffect(() => {
+        if(!isLoggedIn)
+            navigate(`/login`);
+    })
 
     function handleSubmit(e) {
         e.preventDefault();

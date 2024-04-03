@@ -24,7 +24,6 @@ const TrWrapper = styled.tr`
 function TextBoardListItem(props) {
     const {board, onClick} = props;
 
-
     let title_indent;
     if(board.boardIndent === 0)
         title_indent = 'title_indent_0';

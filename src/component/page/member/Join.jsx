@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
-import axios from "axios";
+import React, { useEffect, useState, useRef } from 'react';
 import Button from "../../ui/Button";
 import styled from "styled-components";
+import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 const idPattern = /^[A-Za-z0-9]{5,15}$/;
 const pwPattern = /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-])(?=.*[0-9]).{8,16}$/;
@@ -14,6 +15,8 @@ function Join () {
         checkPassword: "",
         userName: "",
     });
+    const navigate = useNavigate();
+    const isLoggedIn = useSelector(state => state);
 
     /*
         '' : default
@@ -45,6 +48,11 @@ function Join () {
         idCheckInfo: false,
         pwCheckInfo: false,
     });
+
+    useEffect(() => {
+        if(isLoggedIn)
+            navigate(`/`);
+    })
 
     const handleCheckId = (e) => {
         console.log('checkId');

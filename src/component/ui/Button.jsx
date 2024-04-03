@@ -2,10 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 
 function Button(props) {
-    const {btnText, onClick} = props;
+    const {btnText, onClick, value} = props;
 
     return (
-        <button className='btn btn-outline-info btn-sm' onClick={onClick}>
+        <button className='btn btn-outline-info btn-sm' onClick={onClick} value={value}>
             {btnText}
         </button>
     )

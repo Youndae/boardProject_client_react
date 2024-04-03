@@ -1,47 +1,67 @@
 import React, {useEffect, useState} from 'react';
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
+
 
 import BoardWriteForm from "./BoardWriteForm";
 import Button from "../../ui/Button";
-import axios from "axios";
+import {customAxios} from "../../../modules/customAxios";
 
-import data from '../../../data.json';
 
+const board_default = process.env.REACT_APP_API_BOARD;
 function BoardUpdatePage(props) {
     const { boardNo } = useParams();
-    const [data, setData] = useState({});
+    const [values, setValues] = useState({
+        title: '',
+        content: '',
+    })
+    const navigate = useNavigate();
 
     const updateData = async (boardNo) => {
-        try{
-            const response = await axios.get(`http://localhost:9096/board/board-modify/${boardNo}`);
 
-            setData(response.data);
-        }catch (err) {
-            console.error('axios err : ', err);
-        }
+        await customAxios.get(`${board_default}patch-detail/${boardNo}`)
+            .then(res => {
+                console.log('update detail res.data : ', res.data);
+                setValues({
+                    title: res.data.content.boardTitle,
+                    content: res.data.content.boardContent,
+                });
+            })
+            .catch(err => {
+                console.error('update detail axios error : ', err);
+            });
     }
 
     useEffect(() => {
         updateData(boardNo);
-    })
-
-    const [values, setValues] = useState({
-        title: data.boardTitle,
-        content: data.boardContent,
-    })
+    }, [boardNo]);
 
     const handleChange = (e) => {
+        e.preventDefault();
+        console.log('handleChange');
         setValues({
             ...values,
             [e.target.name] : e.target.value,
         })
     }
 
-    function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("update submit!");
         console.log("title : ", values.title);
         console.log("content : ", values.content);
+
+        await customAxios.patch(`${board_default}${boardNo}`, {
+            boardTitle: values.title,
+            boardContent: values.content,
+        })
+            .then(res => {
+                console.log('patch axios res.data : ', res.data);
+                const patchNo = res.data;
+                navigate(`/board/${patchNo}`);
+            })
+            .catch(err => {
+                console.error('patch axios error : ', err);
+            })
     }
 
     return (

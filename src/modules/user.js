@@ -11,8 +11,12 @@ const SET_USER = 'SET_USER';
 //action function
 // export const getToken = data => ({ type: SET_USER, data });
 
+
+
 //reducer
 export default function user(state = {}, action) {
+    console.log('action.type : ', action.type);
+    console.log('state : ', state);
     switch (action.type) {
         case SET_USER:
             console.log('action data : ', action.data);

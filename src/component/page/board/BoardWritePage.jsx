@@ -1,16 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {customAxios} from "../../../modules/customAxios";
 
 import BoardWriteForm from './BoardWriteForm';
 import Button from "../../ui/Button";
 
+const board_default = process.env.REACT_APP_API_BOARD;
 function BoardWritePage (props) {
+    const isLoggedIn = useSelector(state => state);
+    const navigate = useNavigate();
 
-    function handleSubmit(e) {
+    useEffect(() => {
+        if(!isLoggedIn)
+            navigate(`/login`);
+    }, []);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         console.log("handleSubmit");
         console.log("values.title : ", values.title);
         console.log("values.content: ", values.content);
+
+        await customAxios.post(`${board_default}`, {
+            boardTitle: values.title,
+            boardContent: values.content,
+        })
+        .then(res => {
+            console.log('board insert res : ', res);
+            const insertNo = res.data;
+            navigate(`/board/${insertNo}`)
+        })
+        .catch(err => {
+            console.error('board insert axios error : ', err);
+        });
+
+
+
         /*const { inputVal, textVal } = e.props;
         console.log("submit!!");
 

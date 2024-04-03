@@ -1,24 +1,71 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, {useEffect, useState} from 'react';
 
 import CommentListItem from "./CommentListItem";
 import Button from "../ui/Button";
+import {customAxios} from "../../modules/customAxios";
 
+
+const comment_default = process.env.REACT_APP_API_COMMENT;
 function CommentList(props) {
-    const { imageNo } = props;
-
-    const [value, setValue] = useState();
+    const { boardNo, imageNo } = props;
+    const [inputValue, setInputValue] = useState('');
+    const [commentPageNo, setCommentPageNo] = useState(1);
+    const [commentValue, setCommentValue] = useState([]);
+    const [uid, setUid] = useState(null);
 
     const inputOnChange = (e) => {
-        setValue(e.target.value);
+        setInputValue(e.target.value);
     }
 
-    const commentBtnOnClick = () => {
-        console.log("comment btn click");
+    const handleInputPressKey = (e) => {
+        if(e.key === 'Enter')
+            console.log('input enter');
     }
 
-    const comment = () => {
+    const commentBtnOnClick = async (e) => {
+        e.preventDefault();
+
+        await customAxios.post(`${comment_default}`, {
+            commentContent: inputValue,
+            boardNo: boardNo,
+            imageNo: imageNo,
+        })
+            .then(res => {
+                console.log('comment insert res : ', res);
+                setInputValue('');
+                handleInputSuccessRerender();
+            })
+            .catch(err => {
+                console.log('comment insert error : ', err);
+            })
+    }
+
+    const handleInputSuccessRerender = (e) => {
+        console.log('handleInput SuccessRerender');
+        getCommentData(commentPageNo);
+    }
+
+    useEffect(() => {
+        getCommentData(commentPageNo);
+    }, [commentPageNo]);
+
+    const getCommentData = async (pageNum) => {
         /*commentList 데이터*/
+        try{
+            const response = await customAxios.get(`${comment_default}`, {
+                params: {
+                    boardNo: boardNo,
+                    imageNo: imageNo,
+                    pageNum: commentPageNo,
+                }
+            });
+
+            console.log("commentResponse : ", response);
+            setCommentValue(response.data.content);
+            setUid(response.data.userStatus.uid);
+        }catch (err) {
+            console.error("commentError : ", err);
+        }
     }
 
     return (
@@ -31,23 +78,26 @@ function CommentList(props) {
                         name={"commentContent"}
                         placeholder={"댓글을 작성해주세요"}
                         onChange={inputOnChange}
-                        value={value}
+                        value={inputValue}
+                        onKeyUp={handleInputPressKey}
                     />
                     <Button
                         btnText={"작성"}
-                        onClick={() => {
-                            commentBtnOnClick();
-                        }}
+                        onClick={commentBtnOnClick}
                     />
                 </div>
             </form>
             <div className="comment-area">
                 {/*댓글 리스트*/}
-                {comment.map((comment, index) => {
+                {commentValue.map((comment, index) => {
                     return (
                         <CommentListItem
                             key={comment.commentNo}
                             comment={comment}
+                            uid={uid}
+                            handleInputSuccess={handleInputSuccessRerender}
+                            boardNo={boardNo}
+                            imageNo={imageNo}
                         />
                     )
                 })}
