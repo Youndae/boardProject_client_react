@@ -1,32 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import styled from 'styled-components';
-import {customImageAxios} from "../../modules/customAxios";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { customImageAxios } from "../../../modules/customAxios";
 
 const Image = styled.img`
     width: 300px;
     height: 300px;
 `;
 
-
-function ImageBoardListItem(props) {
-
-    const {image, onClick} = props;
+function ImageDetailForm(props) {
+    const { imageData } = props;
     const [imageSrc, setImageSrc] = useState('');
-
-    // const imageName = 'http://192.168.0.15:9096/image-board/display/' + image.imageName;
+    console.log('imageDetailForm imageName : ', imageData.imageName);
 
     useEffect(() => {
-        console.log('useEffect');
-        getImageData(image.imageName);
-    }, [image]);
+        getImageData(imageData.imageName);
+    }, [imageData]);
 
     const getImageData = async (imageName) => {
-
         await customImageAxios.get(`display/${imageName}`)
             .then(res => {
-                // console.log('get ImageData res : ', res);
-                let tester;
                 const myFile = new File([res.data], 'imageName')
                 const reader = new FileReader()
                 reader.onload = ev => {
@@ -40,14 +32,12 @@ function ImageBoardListItem(props) {
             })
     }
 
+
     return (
-        <div className="col-md-4">
-            <a onClick={onClick}>
-                <Image className="imageData" src={imageSrc}/>
-                <p>{image.imageTitle}</p>
-            </a>
+        <div className="mb-4">
+            <Image className={"imageData"} src={imageSrc} />
         </div>
-    );
+    )
 }
 
-export default ImageBoardListItem;
+export default ImageDetailForm;

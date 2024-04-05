@@ -1,9 +1,14 @@
 import React, {useEffect, useState} from 'react';
+import styled from "styled-components";
 
 import CommentListItem from "./CommentListItem";
 import Button from "../ui/Button";
+import DisabledButton from "../ui/DisabledButton";
 import {customAxios} from "../../modules/customAxios";
 
+const CommentInputWrapper = styled.input`
+    width: 250px;
+`
 
 const comment_default = process.env.REACT_APP_API_COMMENT;
 function CommentList(props) {
@@ -68,28 +73,45 @@ function CommentList(props) {
         }
     }
 
+    let commentInputBtn = <DisabledButton
+                            btnText={"작성"}
+                            onClick={commentBtnOnClick}
+                        />;
+    let commentInput = <CommentInputWrapper
+                            type={"text"}
+                            placeholder={"로그인 후 댓글 작성이 가능합니다."}
+                            disabled={true}
+                        />
+
+    if(uid !== null){
+        commentInputBtn = <Button
+                            btnText={"작성"}
+                            onClick={commentBtnOnClick}
+                        />
+        commentInput = <CommentInputWrapper
+                            type={"text"}
+                            id={"commentContent"}
+                            name={"commentContent"}
+                            placeholder={"댓글을 작성해주세요"}
+                            onChange={inputOnChange}
+                            value={inputValue}
+                            onKeyUp={handleInputPressKey}
+                        />
+    }
+
+    console.log('commentValue : ', commentValue);
     return (
         <>
             <form id="commentFrm">
                 <div>
-                    <input
-                        type={"text"}
-                        id={"commentContent"}
-                        name={"commentContent"}
-                        placeholder={"댓글을 작성해주세요"}
-                        onChange={inputOnChange}
-                        value={inputValue}
-                        onKeyUp={handleInputPressKey}
-                    />
-                    <Button
-                        btnText={"작성"}
-                        onClick={commentBtnOnClick}
-                    />
+                    {commentInput}
+                    {commentInputBtn}
                 </div>
             </form>
             <div className="comment-area">
                 {/*댓글 리스트*/}
                 {commentValue.map((comment, index) => {
+                    console.log('comment: ', comment);
                     return (
                         <CommentListItem
                             key={comment.commentNo}

@@ -8,8 +8,10 @@ import Button from '../ui/Button';
 const Wrapper = styled.div``;
 
 function ImageBoardList(props) {
-    const { image } = props;
+    const { image, onClickItem, onClickBtn } = props;
     const navigate = useNavigate();
+
+    console.log('image.imageNo : ', image);
 
     return (
         <div className="container">
@@ -17,15 +19,19 @@ function ImageBoardList(props) {
                 <Button
                     btnText="글작성"
                     onClick={() => {
-                        navigate(`/image/insert`)
+                        onClickBtn();
                     }}
                 />
             </div>
             <div className="row">
-                {image.map((image, indx) => {
+                {image.map((image, index) => {
                     return (
                         <ImageBoardListItem
+                            key={image.imageNo}
                             image={image}
+                            onClick={() => {
+                                onClickItem(image)
+                            }}
                         />
                     )
                 })}

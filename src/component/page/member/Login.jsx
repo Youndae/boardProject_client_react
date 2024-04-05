@@ -83,8 +83,7 @@ function Login(props) {
 
                     dispatch(body);
 
-                    // eslint-disable-next-line no-restricted-globals
-                    location.href='/';
+                    navigate('/');
                 })
                 .catch(err => {
                     console.error('axios error : ', err);

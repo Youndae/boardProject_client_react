@@ -15,6 +15,8 @@ const Table = styled.table`
 function TextBoardList(props) {
     const { data, onClickItem, onClickBtn } = props;
 
+    console.log('boardList data : ', data);
+
     return (
         <Wrapper>
             <div className="form-row float-right mb-1">

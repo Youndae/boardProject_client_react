@@ -89,7 +89,7 @@ function NavBar () {
                     <div className="collapse navbar-collapse">
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item active">
-                                <a className="nav-link" onClick={() => navigate("/image-board-list")}>
+                                <a className="nav-link" onClick={() => navigate("/image")}>
                                     사진
                                     <span className="sr-only"></span>
                                 </a>

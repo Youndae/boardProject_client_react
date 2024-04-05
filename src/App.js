@@ -27,7 +27,7 @@ function App() {
         <NavBar />
       <Routes>
         <Route index element={<BoardPage />} />
-        <Route path="image-board-list" element={<ImagePage />}/>
+        <Route path="image" element={<ImagePage />}/>
         <Route path="board/:boardNo" element={<BoardDetailPage />} />
         <Route path="board/insert" element={<BoardWritePage />} />
         <Route path="board/update/:boardNo" element={<BoardUpdatePage />} />

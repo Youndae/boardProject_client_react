@@ -36,7 +36,8 @@ const store = createStore(reducer);
 
 
 root.render(
-  <React.StrictMode>
+    <>
+
       <CookiesProvider>
           <Provider store={store}>
               {/*<PersistGate persistor={persistor}>*/}
@@ -44,7 +45,8 @@ root.render(
               {/*</PersistGate>*/}
           </Provider>
       </CookiesProvider>
-  </React.StrictMode>
+
+    </>
 );
 
 export default store;

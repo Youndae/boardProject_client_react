@@ -1,25 +1,150 @@
-import React, { useState } from 'react';
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
+import { imageValidation } from "../../../modules/imageModule";
+
 
 import BoardWriteForm from "../board/BoardWriteForm";
 import Button from "../../ui/Button";
+import {customAxios, customImageAxios, customImageInsertAxios} from "../../../modules/customAxios";
+import ImageOldPreviewForm from "./ImageOldPreviewForm";
+import ImageNewPreviewForm from "./ImageNewPreviewForm";
 
+let previewNo = 0;
+const image_default = process.env.REACT_APP_API_IMAGE;
 function ImageUpdatePage (props) {
     const { imageNo } = useParams();
     const [values, setValues] = useState({
-        title: "",
-        content: "",
+        title: '',
+        content: '',
     });
+    const [imageDataValue, setImageDataValue] = useState([]);
+    const [deleteImageName, setDeleteImageName] = useState([]);
+    const [files, setFiles] = useState([]);
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         console.log('handleSubmit');
+
+        console.log('title : ', values.title);
+        console.log('content : ', values.content);
+        deleteImageName.forEach(fileName => console.log('deleteFileName : ', fileName));
+        files.forEach(file => console.log('new file : ', file.file));
+
+        let formData = new FormData();
+        formData.append('imageTitle', values.title);
+        formData.append('imageContent', values.content);
+        files.forEach(file => formData.append('files', file.file));
+        deleteImageName.forEach(fileName => formData.append('deleteFiles', fileName));
+
+        customImageInsertAxios.patch(`${imageNo}`, formData)
+            .then(res => {
+                console.log('image patch res : ', res.data);
+                navigate(`/image/${res.data}`);
+            })
+            .catch(err => {
+                console.error('image patch error : ', err);
+            })
+
     }
 
+    useEffect(() => {
+        getImageBoardData(imageNo);
+        getImageData(imageNo);
+
+        previewNo = 0;
+    }, [imageNo]);
+
+    //게시글 title, content 데이터 조회
+    const getImageBoardData = async (imageNo) => {
+        await customAxios.get(`${image_default}patch-detail/${imageNo}`)
+            .then(res => {
+                console.log('image modify res : ', res);
+                setValues({
+                    title: res.data.content.imageTitle,
+                    content: res.data.content.imageContent,
+                });
+            })
+            .catch(err => {
+                console.error('getImage-patch Error : ', err);
+            })
+    }
+
+    //게시글 이미지 리스트 조회
+    const getImageData = async (imageNo) => {
+        await customAxios.get(`${image_default}patch-detail/image/${imageNo}`)
+            .then(res => {
+                console.log('get imageData res : ', res);
+                setImageDataValue(res.data);
+                // modifyFiles(res.data);
+            })
+            .catch(err => {
+                console.error('get imageData error : ', err);
+            });
+    }
+
+    //기존 이미지 삭제
+    const handleOldImageDelete = (e) => {
+        const deleteImageStep = Number(e.target.getAttribute('value'));
+
+        const imageDataArr = [...imageDataValue];
+        const deleteObject = imageDataArr.find(function(item) {
+            return item.imageStep === deleteImageStep;
+        });
+
+        const deleteIndex = imageDataArr.indexOf(deleteObject);
+        imageDataArr.splice(deleteIndex, 1);
+
+        setImageDataValue(imageDataArr);
+
+
+        const deleteFileName = deleteObject.imageName;
+        setDeleteImageName([...deleteImageName, deleteFileName]);
+
+    }
+
+    //title, content 수정
     const handleChange = (e) => {
-
+        setValues({
+            ...values,
+            [e.target.name] : e.target.value,
+        })
     }
+
+    //이미지 추가
+    const handleImageInputChange = (e) => {
+        const validationResult = imageValidation(e);
+
+        if(validationResult){
+            const fileList = e.target.files;
+            let fileArr = [...files];
+
+            for(let i = 0; i < fileList.length; i++){
+                fileArr.push({
+                    fileNo: ++previewNo,
+                    file: fileList[i],
+                });
+            }
+
+            setFiles(fileArr);
+        }
+    }
+
+    //새로운 이미지 삭제
+    const handleImageDelete = (e) => {
+        const deleteNo = e.target.getAttribute('value');
+        let arr = [...files];
+        const delObject = arr.find(function(item) {
+            return item.fileNo === deleteNo;
+        })
+
+        const delIndex = arr.indexOf(delObject);
+        arr.splice(delIndex, 1);
+
+        setFiles(arr);
+    }
+
 
     return (
         <div className="container">
@@ -31,10 +156,28 @@ function ImageUpdatePage (props) {
                     <form onSubmit={handleSubmit}>
                         <BoardWriteForm values={values} handleChange={handleChange}/>
                         <div className="attach">
-                            <input type={"file"} multiple/>
+                            <input type={"file"} onChange={handleImageInputChange} multiple/>
                         </div>
                         <div className="content" id="preview">
-
+                            {imageDataValue.map((imageData, index) => {
+                                console.log('comment: ', imageData);
+                                return (
+                                    <ImageOldPreviewForm
+                                        key={imageData.imageStep}
+                                        imageData={imageData}
+                                        handleOnClick={handleOldImageDelete}
+                                    />
+                                )
+                            })}
+                            {files.map((files, index) => {
+                                return (
+                                    <ImageNewPreviewForm
+                                        key={index}
+                                        files={files}
+                                        handleOnClick={handleImageDelete}
+                                    />
+                                )
+                            })}
                         </div>
                         <div className="footer">
                             <Button btnText={"등록"}/>

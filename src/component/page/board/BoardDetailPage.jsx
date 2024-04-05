@@ -14,6 +14,7 @@ function BoardDetailPage (props) {
     const {} = props;
     const { boardNo } = useParams();
     const [data, setData] = useState([]);
+    const [uid, setUid] = useState('');
     console.log('boardNo : ', boardNo);
     /*useEffect(() => {
         console.log('useEffect');
@@ -39,6 +40,7 @@ function BoardDetailPage (props) {
             const response = await customAxios.get(`${board_default}${boardNo}`);
             console.log('detail response : ', response);
             setData(response.data.content);
+            setUid(response.data.userStatus.uid);
         }catch (err) {
             console.error('detail error : ', err);
         }
@@ -70,6 +72,7 @@ function BoardDetailPage (props) {
         <div className="container">
             <BoardDetailForm
                 boardInfo={data}
+                uid={uid}
             />
             {/*comment*/}
             <CommentList

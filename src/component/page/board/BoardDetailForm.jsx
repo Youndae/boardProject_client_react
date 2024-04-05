@@ -8,7 +8,7 @@ import Button from "../../ui/Button";
 
 const board_default = process.env.REACT_APP_API_BOARD;
 function BoardDetailForm (props) {
-    const { boardInfo } = props;
+    const { boardInfo, uid } = props;
     const navigate = useNavigate();
 
     const handleBoardDelete = async (e) => {
@@ -23,10 +23,40 @@ function BoardDetailForm (props) {
             })
     }
 
+    const writer = boardInfo.userId;
+    let replyBtn = null;
+    let modifyBtn = null;
+    let deleteBtn = null;
+
+    if(uid !== null){
+        if(uid === writer){
+            modifyBtn = <Button
+                            btnText="수정"
+                            onClick={() => {
+                                navigate(`/board/update/${boardInfo.boardNo}`)
+                            }}
+                        />
+
+            deleteBtn = <Button
+                            btnText="삭제"
+                            onClick={handleBoardDelete}
+                        />
+        }
+
+        replyBtn = <Button
+                        btnText="답글"
+                        btnDivClassName="form-row float-right mb-3"
+                        onClick={() => {
+                            navigate(`/board/reply/${boardInfo.boardNo}`)
+                        }}
+                    />
+    }
+
+
     return (
         <div>
             <div className="form-row float-right mb-3">
-                <Button
+                {/*<Button
                     btnText="답글"
                     btnDivClassName="form-row float-right mb-3"
                     onClick={() => {
@@ -42,7 +72,10 @@ function BoardDetailForm (props) {
                 <Button
                     btnText="삭제"
                     onClick={handleBoardDelete}
-                />
+                />*/}
+                {replyBtn}
+                {modifyBtn}
+                {deleteBtn}
             </div>
 
             <div className="form-group">
@@ -51,7 +84,7 @@ function BoardDetailForm (props) {
             </div>
             <div className="form-group">
                 <label>작성자</label>
-                <p>{boardInfo.userId}</p>
+                <p>{writer}</p>
             </div>
             <div className="form-group">
                 <label>작성일</label>
