@@ -27,7 +27,13 @@ function App() {
         <NavBar />
       <Routes>
         <Route index element={<BoardPage />} />
+        <Route path="?pageNum=:pageNum" element={<BoardPage />}/>
+        <Route path="?keyword=:keyword&searchType=:searchType" element={<BoardPage />}/>
+        <Route path="?keyword=:keyword&searchType=:searchType?pageNum=:pageNum" element={<BoardPage />}/>
         <Route path="image" element={<ImagePage />}/>
+        <Route path="image?pageNum=:pageNum" element={<ImagePage />}/>
+        <Route path="image?keyword=:keyword&searchType=:searchType" element={<ImagePage />}/>
+        <Route path="image?keyword=:keyword&searchType=:searchType?pageNum=:pageNum" element={<ImagePage />}/>
         <Route path="board/:boardNo" element={<BoardDetailPage />} />
         <Route path="board/insert" element={<BoardWritePage />} />
         <Route path="board/update/:boardNo" element={<BoardUpdatePage />} />

@@ -14,19 +14,13 @@ function ImageBoardListItem(props) {
     const {image, onClick} = props;
     const [imageSrc, setImageSrc] = useState('');
 
-    // const imageName = 'http://192.168.0.15:9096/image-board/display/' + image.imageName;
-
     useEffect(() => {
-        console.log('useEffect');
         getImageData(image.imageName);
     }, [image]);
 
     const getImageData = async (imageName) => {
-
         await customImageAxios.get(`display/${imageName}`)
             .then(res => {
-                // console.log('get ImageData res : ', res);
-                let tester;
                 const myFile = new File([res.data], 'imageName')
                 const reader = new FileReader()
                 reader.onload = ev => {
