@@ -8,7 +8,7 @@ import {customAxios} from "../../../modules/customAxios";
 
 
 const board_default = process.env.REACT_APP_API_BOARD;
-function BoardUpdatePage(props) {
+function BoardUpdatePage() {
     const { boardNo } = useParams();
     const [values, setValues] = useState({
         title: '',

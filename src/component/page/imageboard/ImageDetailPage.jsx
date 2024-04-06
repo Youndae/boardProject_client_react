@@ -25,7 +25,6 @@ function ImageDetailPage(props) {
     const getImageDetailData = async (imageNo) => {
         await customAxios.get(`${image_default}${imageNo}`)
             .then(res => {
-                console.log('imageDetail res : ', res);
                 setImageInfo(res.data.content);
                 setImageData(res.data.content.imageData);
                 setUid(res.data.userStatus.uid);
@@ -58,18 +57,6 @@ function ImageDetailPage(props) {
     return (
         <div className="container">
             <div className="form-row float-right mb-3">
-                {/*<Button
-                    btnText="수정"
-                    onClick={() => {
-                        navigate(`/image/update/${imageNo}`)
-                    }}
-                />
-                <Button
-                    btnText="삭제"
-                    onClick={() => {
-                        navigate(`/image/delete/${imageNo}`)
-                    }}
-                />*/}
                 {modifyBtn}
                 {deleteBtn}
             </div>
@@ -96,9 +83,6 @@ function ImageDetailPage(props) {
                             />
                         )
                     })}
-                    {/*<div className="mb-4">
-                        <img />
-                    </div>*/}
                 </div>
                 <p>{imageInfo.imageContent}</p>
             </div>

@@ -4,7 +4,10 @@ import styled from "styled-components";
 import CommentListItem from "./CommentListItem";
 import Button from "../ui/Button";
 import DisabledButton from "../ui/DisabledButton";
+import Paging from "../ui/Paging";
+
 import {customAxios} from "../../modules/customAxios";
+import {createPagingObject} from "../../modules/pagingModule";
 
 const CommentInputWrapper = styled.input`
     width: 250px;
@@ -17,6 +20,13 @@ function CommentList(props) {
     const [commentPageNo, setCommentPageNo] = useState(1);
     const [commentValue, setCommentValue] = useState([]);
     const [uid, setUid] = useState(null);
+    const [pagingData, setPagingData] = useState({
+        startPage: 0,
+        endPage: 0,
+        prev: false,
+        next: false,
+        activeNo: commentPageNo,
+    });
 
     const inputOnChange = (e) => {
         setInputValue(e.target.value);
@@ -68,6 +78,16 @@ function CommentList(props) {
             console.log("commentResponse : ", response);
             setCommentValue(response.data.content);
             setUid(response.data.userStatus.uid);
+
+            const pagingObject = createPagingObject(pageNum, response.data.totalPages);
+
+            setPagingData({
+                startPage: pagingObject.startPage,
+                endPage: pagingObject.endPage,
+                prev: pagingObject.prev,
+                next: pagingObject.next,
+                activeNo: pageNum,
+            });
         }catch (err) {
             console.error("commentError : ", err);
         }
@@ -100,6 +120,26 @@ function CommentList(props) {
     }
 
     console.log('commentValue : ', commentValue);
+
+    const handleCommentPageNumOnClick = (e) => {
+        const clickNo = e.target.textContent;
+
+        setCommentPageNo(clickNo);
+    }
+
+    const handleCommentPagePrevOnClick = () => {
+        const prevNo = pagingData.startPage - 1;
+
+        setCommentPageNo(prevNo);
+    }
+
+    const handleCommentPageNextOnClick = () => {
+        const nextNo = pagingData.endPage + 1;
+
+        setCommentPageNo(nextNo);
+    }
+
+
     return (
         <>
             <form id="commentFrm">
@@ -109,7 +149,6 @@ function CommentList(props) {
                 </div>
             </form>
             <div className="comment-area">
-                {/*댓글 리스트*/}
                 {commentValue.map((comment, index) => {
                     console.log('comment: ', comment);
                     return (
@@ -126,7 +165,12 @@ function CommentList(props) {
 
             </div>
             <div className="comment-paging">
-                {/*댓글 페이징 버튼*/}
+                <Paging
+                    pagingData={pagingData}
+                    pageNumOnClick={handleCommentPageNumOnClick}
+                    prevOnClick={handleCommentPagePrevOnClick}
+                    nextOnClick={handleCommentPageNextOnClick}
+                />
             </div>
         </>
     )

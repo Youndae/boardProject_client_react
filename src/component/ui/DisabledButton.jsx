@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 
 function DisabledButton(props) {
     const {btnText, onClick, value} = props;

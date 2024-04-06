@@ -1,24 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import TextBoardListItem from "./TextBoardListItem";
 import Button from "../ui/Button";
-import axios from "axios";
-
-const Wrapper = styled.div`
-
-`;
-
-const Table = styled.table`
-    border: solid 1px black;
-`;
 
 function TextBoardList(props) {
     const { data, onClickItem, onClickBtn } = props;
 
-    console.log('boardList data : ', data);
-
     return (
-        <Wrapper>
+        <div>
             <div className="form-row float-right mb-1">
                 <Button
                     btnText="글작성"
@@ -50,7 +39,7 @@ function TextBoardList(props) {
                     })}
                 </tbody>
             </table>
-        </Wrapper>
+        </div>
     );
 }
 

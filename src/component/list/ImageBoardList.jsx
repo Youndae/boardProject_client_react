@@ -1,15 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
-import {useNavigate} from "react-router-dom";
 
 import ImageBoardListItem from './ImageBoardListItem';
 import Button from '../ui/Button';
 
-const Wrapper = styled.div``;
-
 function ImageBoardList(props) {
     const { image, onClickItem, onClickBtn } = props;
-    const navigate = useNavigate();
 
     console.log('image.imageNo : ', image);
 

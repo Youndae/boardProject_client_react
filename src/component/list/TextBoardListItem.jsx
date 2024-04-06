@@ -16,9 +16,6 @@ const TitleWrapper = styled.span`
     }
 `;
 
-const TrWrapper = styled.tr`
-    border: 1px solid black;
-`;
 
 
 function TextBoardListItem(props) {

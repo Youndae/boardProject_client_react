@@ -10,7 +10,6 @@ const Image = styled.img`
 function ImageDetailForm(props) {
     const { imageData } = props;
     const [imageSrc, setImageSrc] = useState('');
-    console.log('imageDetailForm imageName : ', imageData.imageName);
 
     useEffect(() => {
         getImageData(imageData.imageName);
@@ -31,7 +30,6 @@ function ImageDetailForm(props) {
                 console.error('imageData axios error : ', err);
             })
     }
-
 
     return (
         <div className="mb-4">

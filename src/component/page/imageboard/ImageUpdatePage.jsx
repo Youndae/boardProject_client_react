@@ -5,7 +5,7 @@ import { imageValidation } from "../../../modules/imageModule";
 
 import BoardWriteForm from "../board/BoardWriteForm";
 import Button from "../../ui/Button";
-import {customAxios, customImageAxios, customImageInsertAxios} from "../../../modules/customAxios";
+import {customAxios, customImageInsertAxios} from "../../../modules/customAxios";
 import ImageOldPreviewForm from "./ImageOldPreviewForm";
 import ImageNewPreviewForm from "./ImageNewPreviewForm";
 
@@ -25,10 +25,6 @@ function ImageUpdatePage (props) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        console.log('handleSubmit');
-
-        console.log('title : ', values.title);
-        console.log('content : ', values.content);
         deleteImageName.forEach(fileName => console.log('deleteFileName : ', fileName));
         files.forEach(file => console.log('new file : ', file.file));
 
@@ -46,7 +42,6 @@ function ImageUpdatePage (props) {
             .catch(err => {
                 console.error('image patch error : ', err);
             })
-
     }
 
     useEffect(() => {
@@ -60,7 +55,6 @@ function ImageUpdatePage (props) {
     const getImageBoardData = async (imageNo) => {
         await customAxios.get(`${image_default}patch-detail/${imageNo}`)
             .then(res => {
-                console.log('image modify res : ', res);
                 setValues({
                     title: res.data.content.imageTitle,
                     content: res.data.content.imageContent,
@@ -75,9 +69,7 @@ function ImageUpdatePage (props) {
     const getImageData = async (imageNo) => {
         await customAxios.get(`${image_default}patch-detail/image/${imageNo}`)
             .then(res => {
-                console.log('get imageData res : ', res);
                 setImageDataValue(res.data);
-                // modifyFiles(res.data);
             })
             .catch(err => {
                 console.error('get imageData error : ', err);
@@ -87,7 +79,6 @@ function ImageUpdatePage (props) {
     //기존 이미지 삭제
     const handleOldImageDelete = (e) => {
         const deleteImageStep = Number(e.target.getAttribute('value'));
-
         const imageDataArr = [...imageDataValue];
         const deleteObject = imageDataArr.find(function(item) {
             return item.imageStep === deleteImageStep;

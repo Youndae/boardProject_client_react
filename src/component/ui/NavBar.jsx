@@ -53,8 +53,7 @@ function NavBar () {
 
         customAxios.post(`${member_default}logout`)
             .then(res => {
-                // eslint-disable-next-line no-restricted-globals
-                location.href = '/';
+                navigate('/');
             })
             .catch(err => {
                 console.error('logoutError : ', err);

@@ -35,18 +35,6 @@ function BoardWritePage (props) {
         .catch(err => {
             console.error('board insert axios error : ', err);
         });
-
-
-
-        /*const { inputVal, textVal } = e.props;
-        console.log("submit!!");
-
-        const title2 = inputVal;
-        console.log('title2 : ' + title2);
-
-        // const content2 = e.target.children.textarea.value();
-        const content2 = textVal;
-        console.log('content2 : ' + content2);*/
     }
 
     const [values, setValues] = useState({

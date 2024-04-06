@@ -14,7 +14,6 @@ function BoardDetailForm (props) {
     const handleBoardDelete = async (e) => {
         await customAxios.delete(`${board_default}${boardInfo.boardNo}`)
             .then(res => {
-                console.log('res.data : ', res.data);
                 navigate('/');
             })
             .catch(err => {
@@ -56,23 +55,6 @@ function BoardDetailForm (props) {
     return (
         <div>
             <div className="form-row float-right mb-3">
-                {/*<Button
-                    btnText="답글"
-                    btnDivClassName="form-row float-right mb-3"
-                    onClick={() => {
-                        navigate(`/board/reply/${boardInfo.boardNo}`)
-                    }}
-                />
-                <Button
-                    btnText="수정"
-                    onClick={() => {
-                        navigate(`/board/update/${boardInfo.boardNo}`)
-                    }}
-                />
-                <Button
-                    btnText="삭제"
-                    onClick={handleBoardDelete}
-                />*/}
                 {replyBtn}
                 {modifyBtn}
                 {deleteBtn}

@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {customImageAxios} from "../../modules/customAxios";
-import axios from "axios";
 
 const Image = styled.img`
     width: 300px;

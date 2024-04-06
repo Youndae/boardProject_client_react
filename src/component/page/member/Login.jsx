@@ -59,14 +59,9 @@ function Login(props) {
             setResponseStatus('pw');
         }else{
             //axios.post(login)
-
-            let response;
-
             let form = new FormData();
             form.append('userId', values.userId);
             form.append('userPw', values.userPw);
-            console.log('id, pw : ', values.userId[0], values.userPw[0]);
-            console.log('form : ', form);
 
             const data = {
                 userId: values.userId[0],
@@ -75,8 +70,6 @@ function Login(props) {
 
             await customAxios.post(`${member_default}login`, data)
                 .then(res => {
-                    console.log('res : ', res);
-                    console.log('res.data : ', res.data);
                     const body = {
                         type: 'isLoggedIn',
                     }
@@ -86,58 +79,11 @@ function Login(props) {
                     navigate('/');
                 })
                 .catch(err => {
-                    console.error('axios error : ', err);
-
                     const statusCode = err.response.status;
 
                     if(statusCode === 403)
                         setResponseStatus('fail');
                 })
-
-
-
-            /*response = await axios.post('http://localhost:9096/member/login2',
-                data, {withCredentials: true})
-                .then(res => {
-                    console.log('res : ', res);
-                    console.log('res.data : ', res.data);
-                    // console.log('res.headers : ', res.headers["set-cookie"]);
-
-                    const body = {
-                        type: 'isLoggedIn'
-                    }
-
-                    dispatch(body);
-                    // eslint-disable-next-line no-restricted-globals
-                    // location.href='/';
-
-                })
-                .catch(err => {
-                    console.error('axios error : ', err);
-
-                    const statusCode = err.response.status;
-
-                    if(statusCode === 403)
-                        setResponseStatus('fail');
-                    else
-                        alert('오류가 발생했습니다.\n문제가 계속된다면 관리자에게 문의해주세요');
-                });*/
-
-            /*if(cookies.Authorization_ino == undefined){
-                response = axios.post('http://localhost:9096/member/login', {
-                    headers: {
-                        'Content-type': 'application/x-www-form-urlencoded',
-                    },
-                    userId: values.userId,
-                    userPw: values.userPw
-                });
-            }else {
-                response = axios.post('http://localhost:9096/member/login', form, {
-                    headers: {
-                        Cookie: `Authorization_ino=${cookies.Authorization_ino}`
-                    }
-                })
-            }*/
         }
     }
 

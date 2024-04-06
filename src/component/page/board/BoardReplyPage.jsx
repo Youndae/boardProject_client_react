@@ -9,8 +9,8 @@ import Button from "../../ui/Button";
 
 
 const board_default = process.env.REACT_APP_API_BOARD;
-function BoardReplyPage(props) {
-    const {boardNo} = useParams();
+function BoardReplyPage() {
+    const { boardNo } = useParams();
     const [values, setValues] = useState({
         title: "",
         content: "",
@@ -29,7 +29,6 @@ function BoardReplyPage(props) {
     const getReplyData = async (boardNo) => {
         await customAxios.get(`${board_default}reply/${boardNo}`)
             .then(res => {
-                console.log('res.data.content : ', res.data.content);
                 setReplyValues({
                     boardGroupNo: res.data.content.boardGroupNo,
                     boardIndent: res.data.content.boardIndent,
@@ -43,11 +42,6 @@ function BoardReplyPage(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("reply submit");
-
-        console.log('parents boardNo : ', boardNo);
-        console.log('title : ', values.title);
-        console.log('content : ', values.content);
 
         await customAxios.post(`${board_default}reply`,
             {

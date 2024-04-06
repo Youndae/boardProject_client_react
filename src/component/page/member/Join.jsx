@@ -55,7 +55,6 @@ function Join () {
     })
 
     const handleCheckId = (e) => {
-        console.log('checkId');
         /*
             axios.post 아이디 체크 후
             정상이라면 setIdCheck
