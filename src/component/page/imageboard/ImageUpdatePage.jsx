@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import { imageValidation } from "../../../modules/imageModule";
-
 
 import BoardWriteForm from "../board/BoardWriteForm";
 import Button from "../../ui/Button";
-import {customAxios, customImageInsertAxios} from "../../../modules/customAxios";
 import ImageOldPreviewForm from "./ImageOldPreviewForm";
 import ImageNewPreviewForm from "./ImageNewPreviewForm";
 
+import { imageValidation } from "../../../modules/imageModule";
+import {axiosErrorHandling, imageAxios, imageInsertAxios} from "../../../modules/customAxios";
+
 let previewNo = 0;
-const image_default = process.env.REACT_APP_API_IMAGE;
-function ImageUpdatePage (props) {
+function ImageUpdatePage () {
     const { imageNo } = useParams();
     const [values, setValues] = useState({
         title: '',
@@ -22,28 +21,6 @@ function ImageUpdatePage (props) {
     const [files, setFiles] = useState([]);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        deleteImageName.forEach(fileName => console.log('deleteFileName : ', fileName));
-        files.forEach(file => console.log('new file : ', file.file));
-
-        let formData = new FormData();
-        formData.append('imageTitle', values.title);
-        formData.append('imageContent', values.content);
-        files.forEach(file => formData.append('files', file.file));
-        deleteImageName.forEach(fileName => formData.append('deleteFiles', fileName));
-
-        customImageInsertAxios.patch(`${imageNo}`, formData)
-            .then(res => {
-                console.log('image patch res : ', res.data);
-                navigate(`/image/${res.data}`);
-            })
-            .catch(err => {
-                console.error('image patch error : ', err);
-            })
-    }
-
     useEffect(() => {
         getImageBoardData(imageNo);
         getImageData(imageNo);
@@ -53,7 +30,7 @@ function ImageUpdatePage (props) {
 
     //게시글 title, content 데이터 조회
     const getImageBoardData = async (imageNo) => {
-        await customAxios.get(`${image_default}patch-detail/${imageNo}`)
+        await imageAxios.get(`patch-detail/${imageNo}`)
             .then(res => {
                 setValues({
                     title: res.data.content.imageTitle,
@@ -61,20 +38,41 @@ function ImageUpdatePage (props) {
                 });
             })
             .catch(err => {
-                console.error('getImage-patch Error : ', err);
+                axiosErrorHandling(err);
             })
     }
 
     //게시글 이미지 리스트 조회
     const getImageData = async (imageNo) => {
-        await customAxios.get(`${image_default}patch-detail/image/${imageNo}`)
+        await imageAxios.get(`patch-detail/image/${imageNo}`)
             .then(res => {
                 setImageDataValue(res.data);
             })
             .catch(err => {
-                console.error('get imageData error : ', err);
+                axiosErrorHandling(err);
             });
     }
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        let formData = new FormData();
+
+        formData.append('imageTitle', values.title);
+        formData.append('imageContent', values.content);
+        files.forEach(file => formData.append('files', file.file));
+        deleteImageName.forEach(fileName => formData.append('deleteFiles', fileName));
+
+        imageInsertAxios.patch(`${imageNo}`, formData)
+            .then(res => {
+                navigate(`/image/${res.data}`);
+            })
+            .catch(err => {
+                axiosErrorHandling(err);
+            })
+    }
+
 
     //기존 이미지 삭제
     const handleOldImageDelete = (e) => {
@@ -89,10 +87,8 @@ function ImageUpdatePage (props) {
 
         setImageDataValue(imageDataArr);
 
-
         const deleteFileName = deleteObject.imageName;
         setDeleteImageName([...deleteImageName, deleteFileName]);
-
     }
 
     //title, content 수정
@@ -151,7 +147,6 @@ function ImageUpdatePage (props) {
                         </div>
                         <div className="content" id="preview">
                             {imageDataValue.map((imageData, index) => {
-                                console.log('comment: ', imageData);
                                 return (
                                     <ImageOldPreviewForm
                                         key={imageData.imageStep}

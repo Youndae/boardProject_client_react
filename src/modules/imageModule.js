@@ -1,5 +1,5 @@
 import React from "react";
-import {customImageAxios} from "./customAxios";
+import {imageAxios} from "./customAxios";
 
 export let imageStep = 0;
 export let files = [];
@@ -248,7 +248,7 @@ export const modifyFiles = (dataList) => {
 
     for(let idx = 0; idx < dataList.length; idx++){
         const previewNo = ++imageStep;
-        customImageAxios.get(`display/${dataList[idx].imageName}`)
+        imageAxios.get(`display/${dataList[idx].imageName}`)
             .then(res => {
                 console.log('display res : ', res);
                 const myFile = new File([res.data], 'imageName');

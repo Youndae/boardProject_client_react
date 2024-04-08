@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import dayjs from "dayjs";
 
 const TitleWrapper = styled.span`
     &.title_indent_1 {
@@ -17,7 +18,6 @@ const TitleWrapper = styled.span`
 `;
 
 
-
 function TextBoardListItem(props) {
     const {board, onClick} = props;
 
@@ -33,13 +33,6 @@ function TextBoardListItem(props) {
     else if(board.boardIndent === 4)
         title_indent = 'title_indent_4';
 
-    const date = new Date(board.boardDate);
-    const formatDate = new Intl.DateTimeFormat('ko-KR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    }).format(date);
-
     return (
         <tr>
             <td>{board.boardNo}</td>
@@ -49,7 +42,7 @@ function TextBoardListItem(props) {
                 </TitleWrapper>
             </td>
             <td>{board.userId}</td>
-            <td>{formatDate}</td>
+            <td>{dayjs(board.boardDate).format('YYYY-MM-DD')}</td>
         </tr>
     );
 }

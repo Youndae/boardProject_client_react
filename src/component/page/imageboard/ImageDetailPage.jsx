@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {customAxios} from "../../../modules/customAxios";
 import dayjs from "dayjs";
 
 
@@ -8,8 +7,8 @@ import Button from "../../ui/Button";
 import ImageDetailForm from "./ImageDetailForm";
 import CommentList from "../../list/CommentList";
 
+import {imageAxios, axiosErrorHandling} from "../../../modules/customAxios";
 
-const image_default = process.env.REACT_APP_API_IMAGE;
 function ImageDetailPage(props) {
     const { imageNo } = useParams();
     const [imageInfo, setImageInfo] = useState([]);
@@ -23,14 +22,14 @@ function ImageDetailPage(props) {
     }, [imageNo]);
 
     const getImageDetailData = async (imageNo) => {
-        await customAxios.get(`${image_default}${imageNo}`)
+        await imageAxios.get(`${imageNo}`)
             .then(res => {
                 setImageInfo(res.data.content);
                 setImageData(res.data.content.imageData);
                 setUid(res.data.userStatus.uid);
             })
             .catch(err => {
-                console.error('imageDetail error : ', err);
+                axiosErrorHandling(err);
             })
     }
 

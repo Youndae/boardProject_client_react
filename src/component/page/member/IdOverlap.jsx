@@ -5,7 +5,7 @@ const OverlapDiv = styled.div`
     color: red;
 `
 
-function EmptyId (props){
+function EmptyId (){
     return (
         <OverlapDiv>
             아이디를 입력하세요
@@ -13,7 +13,7 @@ function EmptyId (props){
     )
 }
 
-function InvalidId(props) {
+function InvalidId() {
     return (
         <OverlapDiv>
             영문자와 숫자를 사용한 5 ~ 15자리만 가능합니다
@@ -21,7 +21,7 @@ function InvalidId(props) {
     )
 }
 
-function DuplicationId(props) {
+function DuplicationId() {
     return (
         <OverlapDiv>
             이미 사용중인 아이디입니다
@@ -29,7 +29,7 @@ function DuplicationId(props) {
     )
 }
 
-function ValidId(props) {
+function ValidId() {
     return (
         <OverlapDiv>
             사용 가능한 아이디입니다
@@ -37,7 +37,7 @@ function ValidId(props) {
     )
 }
 
-function ErrorId(props) {
+function ErrorId() {
     return (
         <OverlapDiv>
             오류가 발생했습니다. 문제가 계속되면 문의해주세요
@@ -45,7 +45,7 @@ function ErrorId(props) {
     )
 }
 
-function NotDuplicateCheckId(props) {
+function NotDuplicateCheckId() {
     return (
         <OverlapDiv>
             아이디 중복 체크를 해주세요
@@ -53,7 +53,7 @@ function NotDuplicateCheckId(props) {
     )
 }
 
-function defaultOverlap(props) {
+function defaultOverlap() {
     return (
         <OverlapDiv>
 

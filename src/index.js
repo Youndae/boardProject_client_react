@@ -5,44 +5,26 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { legacy_createStore as createStore } from 'redux';
 import { Provider } from 'react-redux';
-// import rootReducer from './modules';
-// import { persistStore } from "redux-persist";
-// import { PersistGate } from 'redux-persist/integration/react';
 import { CookiesProvider } from 'react-cookie';
 
 import dayjs from "dayjs";
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import 'dayjs/locale/ko';
+import rootReducer from "./modules";
 
 dayjs.extend(isLeapYear);
 dayjs.locale('ko');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-// const store = createStore(rootReducer);
-// const persistor = persistStore(store);
 
-const reducer = (state = false, action) => {
-    switch (action.type) {
-        case "isLoggedIn":
-            return state = true;
-        case "isLoggedOut":
-            return state = false;
-        default:
-            return state = false;
-    }
-}
-
-const store = createStore(reducer);
-
+const store = createStore(rootReducer);
 
 root.render(
     <>
 
       <CookiesProvider>
           <Provider store={store}>
-              {/*<PersistGate persistor={persistor}>*/}
-                  <App />
-              {/*</PersistGate>*/}
+              <App />
           </Provider>
       </CookiesProvider>
 

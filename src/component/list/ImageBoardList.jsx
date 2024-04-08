@@ -6,8 +6,6 @@ import Button from '../ui/Button';
 function ImageBoardList(props) {
     const { image, onClickItem, onClickBtn } = props;
 
-    console.log('image.imageNo : ', image);
-
     return (
         <div className="container">
             <div className="mb-4">

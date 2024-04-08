@@ -1,36 +1,11 @@
-
-//Redux에서 관리할 초기 상태
-// const initialState = {
-//     user: {},
-// }
-
-//action type
-const SET_USER = 'SET_USER';
-// const DELETE_USER = 'DELETE_USER';
-
-//action function
-// export const getToken = data => ({ type: SET_USER, data });
-
-
-
 //reducer
-export default function user(state = {}, action) {
-    console.log('action.type : ', action.type);
-    console.log('state : ', state);
+export default function user(state = 'default', action) {
     switch (action.type) {
-        case SET_USER:
-            console.log('action data : ', action.data);
-            // console.log('initialState : ', initialState);
-            return {
-                ...state,
-                user : action.data,
-            }
-        /*case DELETE_USER:
-            return {
-                ...state,
-                user: action.data,
-            }*/
+        case "isLoggedIn":
+            return state = 'loggedIn';
+        case "isLoggedOut":
+            return state = 'loggedOut';
         default:
-            return state;
+            return state = 'default'
     }
 }

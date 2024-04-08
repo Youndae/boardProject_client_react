@@ -1,24 +1,22 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import {customAxios} from "../../../modules/customAxios";
-
 import dayjs from "dayjs";
 
 import Button from "../../ui/Button";
 
-const board_default = process.env.REACT_APP_API_BOARD;
+import {axiosErrorHandling, boardAxios} from "../../../modules/customAxios";
+
 function BoardDetailForm (props) {
     const { boardInfo, uid } = props;
     const navigate = useNavigate();
 
     const handleBoardDelete = async (e) => {
-        await customAxios.delete(`${board_default}${boardInfo.boardNo}`)
+        await boardAxios.delete(`${boardInfo.boardNo}`)
             .then(res => {
                 navigate('/');
             })
             .catch(err => {
-                console.error('board delete axios error : ', err);
-                alert('오류가 발생했습니다.\n문제가 계속된다면 관리자에게 문의해주세요.');
+                axiosErrorHandling(err);
             })
     }
 

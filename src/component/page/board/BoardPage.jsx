@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {customAxios} from "../../../modules/customAxios";
 
 import TextBoardList from '../../list/TextBoardList';
-
-import {createPagingObject} from "../../../modules/pagingModule";
 import SearchPaging from "../pagination/SearchPaging";
 
-
-const default_url = process.env.REACT_APP_API_BOARD;
+import {createPagingObject} from "../../../modules/pagingModule";
+import {axiosErrorHandling, boardAxios} from "../../../modules/customAxios";
 
 function BoardPage() {
     const [params] = useSearchParams();
@@ -23,34 +20,32 @@ function BoardPage() {
         next: false,
         activeNo: pageNum,
     });
-
     const navigate = useNavigate();
-
-    const getBoardList = async (pageNum, keyword, searchType) => {
-
-            await customAxios.get(`${default_url}?keyword=${keyword}&searchType=${searchType}&pageNum=${pageNum}`)
-                .then(res => {
-                    const pagingObject = createPagingObject(pageNum, res.data.totalPages);
-
-                    setData(res.data.content);
-                    setPagingData({
-                        startPage: pagingObject.startPage,
-                        endPage: pagingObject.endPage,
-                        prev: pagingObject.prev,
-                        next: pagingObject.next,
-                        activeNo: pageNum,
-                    });
-                })
-                .catch(err => {
-                    console.error('boardList axios error : ', err);
-                });
-
-    }
 
     useEffect(() => {
         getBoardList(pageNum, keyword, searchType);
     }, [pageNum, keyword, searchType]);
 
+    const getBoardList = async (pageNum, keyword, searchType) => {
+
+        await boardAxios.get(`?keyword=${keyword}&searchType=${searchType}&pageNum=${pageNum}`)
+            .then(res => {
+                const pagingObject = createPagingObject(pageNum, res.data.totalPages);
+
+                setData(res.data.content);
+                setPagingData({
+                    startPage: pagingObject.startPage,
+                    endPage: pagingObject.endPage,
+                    prev: pagingObject.prev,
+                    next: pagingObject.next,
+                    activeNo: pageNum,
+                });
+            })
+            .catch(err => {
+                axiosErrorHandling(err);
+            });
+
+    }
 
     return (
         <div className="container">

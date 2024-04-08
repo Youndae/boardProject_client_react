@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
-import {customAxios} from "../../modules/customAxios";
+
+import {memberAxios, axiosErrorHandling} from "../../modules/customAxios";
 
 const Wrapper = styled.div`
     li {
@@ -12,9 +13,9 @@ const Wrapper = styled.div`
     }
 `;
 
-const member_default = process.env.REACT_APP_API_MEMBER;
 
 function NavBar () {
+    const loginState = useSelector((state) => state.user);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -23,7 +24,7 @@ function NavBar () {
     }, []);
 
     const checkLoggedIn = async () => {
-        await customAxios.get(`${member_default}check-login`)
+        await memberAxios.get(`check-login`)
             .then(res => {
                 let dispatchType;
                 const status = res.data.loginStatus;
@@ -39,7 +40,7 @@ function NavBar () {
                 dispatch(body);
             })
             .catch(err => {
-                console.error('loginStatue error : ', err);
+                axiosErrorHandling(err);
             })
     };
 
@@ -51,28 +52,26 @@ function NavBar () {
 
         dispatch(body);
 
-        customAxios.post(`${member_default}logout`)
+        memberAxios.post(`logout`)
             .then(res => {
                 navigate('/');
             })
             .catch(err => {
-                console.error('logoutError : ', err);
+                axiosErrorHandling(err);
             })
 
     }
 
     function LoggedInState(props) {
-        const loginState = useSelector((state) => state);
 
-        console.log('loginState : ', loginState);
         const { onClickLogin } = props;
-        if(loginState === false){
+        if(loginState === 'loggedOut'){
             return (
                 <ul>
                     <button className="user_status_btn" onClick={() => onClickLogin()}>로그인</button>
                 </ul>
             )
-        }else {
+        }else if(loginState === 'loggedIn') {
             return (
                 <ul>
                     <button className="user_status_btn" onClick={LogoutSubmit}>로그아웃</button>
@@ -110,5 +109,7 @@ function NavBar () {
         </Wrapper>
     );
 }
+
+
 
 export default NavBar;

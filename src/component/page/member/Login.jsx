@@ -1,26 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios";
-import {customAxios} from "../../../modules/customAxios";
 import {useDispatch, useSelector} from "react-redux";
-
 
 import Button from "../../ui/Button";
 
+import {memberAxios, axiosErrorHandling} from "../../../modules/customAxios";
 
-axios.defaults.withCredentials = true;
-
-const member_default = process.env.REACT_APP_API_MEMBER;
-
-function Login(props) {
+function Login() {
     const [values, setValues] = useState({
         userId: "",
         userPw: "",
     });
-    const isLoggedIn = useSelector(state => state);
-
-    // const [cookies, setCookie, removeCookie] = useCookies(['Authorization', 'Authorization_ino', 'Authorization_refresh']);
 
     /*
         id : id 미입력
@@ -31,11 +22,6 @@ function Login(props) {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        if(isLoggedIn)
-            navigate(`/`);
-    })
 
     const handleChange = (e) => {
         setValues({
@@ -52,10 +38,8 @@ function Login(props) {
     const handleSubmit = async (e) => {
 
         if(values.userId == '') {
-            console.log("userId == blank");
             setResponseStatus('id');
         }else if(values.userPw == '') {
-            console.log('userPw == blank');
             setResponseStatus('pw');
         }else{
             //axios.post(login)
@@ -68,7 +52,7 @@ function Login(props) {
                 userPw: values.userPw[0],
             };
 
-            await customAxios.post(`${member_default}login`, data)
+            await memberAxios.post(`login`, data)
                 .then(res => {
                     const body = {
                         type: 'isLoggedIn',
@@ -83,6 +67,8 @@ function Login(props) {
 
                     if(statusCode === 403)
                         setResponseStatus('fail');
+                    else
+                        axiosErrorHandling(err);
                 })
         }
     }

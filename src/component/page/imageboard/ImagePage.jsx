@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {customAxios} from "../../../modules/customAxios";
 import {useNavigate, useSearchParams} from "react-router-dom";
 
 import ImageBoardList from "../../list/ImageBoardList";
 import SearchPaging from "../pagination/SearchPaging";
 
 import { createPagingObject } from "../../../modules/pagingModule";
+import {axiosErrorHandling, imageAxios} from "../../../modules/customAxios";
 
-const image_default = process.env.REACT_APP_API_IMAGE;
 function ImagePage() {
     const [params] = useSearchParams();
     const pageNum = params.get('pageNum') == null ? 1 : params.get('pageNum');
@@ -27,9 +26,8 @@ function ImagePage() {
         getImageList(pageNum, keyword, searchType);
     }, [pageNum, keyword, searchType]);
 
-
     const getImageList = async (pageNum, keyword, searchType) => {
-        await customAxios.get(`${image_default}?keyword=${keyword}&searchType=${searchType}&pageNum=${pageNum}`)
+        await imageAxios.get(`?keyword=${keyword}&searchType=${searchType}&pageNum=${pageNum}`)
             .then(res => {
                 const pagingObject = createPagingObject(pageNum, res.data.totalPages);
 
@@ -44,8 +42,9 @@ function ImagePage() {
 
             })
             .catch(err => {
-                console.error('imageList axios error : ', err);
+                axiosErrorHandling(err, navigate);
             });
+
     }
 
     return (

@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import {useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
-
-import { imageValidation } from "../../../modules/imageModule";
-
+import {useDispatch, useSelector} from "react-redux";
 
 import BoardWriteForm from "../board/BoardWriteForm";
 import Button from "../../ui/Button"
-import {customImageInsertAxios} from "../../../modules/customAxios";
 import ImageNewPreviewForm from "./ImageNewPreviewForm";
+
+import { imageValidation } from "../../../modules/imageModule";
+import {axiosErrorHandling, imageInsertAxios, memberAxios} from "../../../modules/customAxios";
 
 
 
@@ -19,33 +18,49 @@ function ImageWritePage() {
        title: "",
        content: "",
     });
-    const navigate = useNavigate();
-    const isLoggedIn = useSelector(state => state);
-    const previewElem = useRef(null);
     const [files, setFiles] = useState([]);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
 
     useEffect(() => {
-        if(!isLoggedIn)
-            navigate(`/login`);
+        checkUserStatus();
 
         previewNo = 0;
     }, []);
 
+    const checkUserStatus = async () => {
+        await memberAxios.get(`check-login`)
+            .then(res => {
+                const status = res.data.loginStatus;
+                if(status === false){
+                    const body = {
+                        type: 'isLoggedOut',
+                    }
+                    dispatch(body);
+                    window.location.href = '/login';
+                }
+            })
+            .catch(err => {
+                axiosErrorHandling(err);
+            })
+    }
+
     function handleSubmit(e) {
         e.preventDefault();
+
         let formData = new FormData();
 
         formData.append('imageTitle', values.title);
         formData.append('imageContent', values.content);
         files.forEach(file => formData.append('files', file.file));
 
-        customImageInsertAxios.post('', formData)
+        imageInsertAxios.post('', formData)
             .then(res => {
-                console.log('image insert res : ', res.data);
                 navigate(`/image/${res.data}`);
             })
             .catch(err => {
-                console.log('image insert error : ', err);
+                axiosErrorHandling(err);
             })
     }
 
@@ -102,7 +117,7 @@ function ImageWritePage() {
                         <div className="attach">
                             <input type={"file"} onChange={handleImageInputChange} multiple/>
                         </div>
-                        <div className="content" id="preview" ref={previewElem}>
+                        <div className="content" id="preview">
                             {files.map((files, index) => {
                                 return (
                                     <ImageNewPreviewForm

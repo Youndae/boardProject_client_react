@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import {customAxios} from "../../../modules/customAxios";
-
-
+import {axiosErrorHandling, boardAxios} from "../../../modules/customAxios";
 
 import BoardWriteForm from "./BoardWriteForm";
 import Button from "../../ui/Button";
 
-
-const board_default = process.env.REACT_APP_API_BOARD;
 function BoardReplyPage() {
     const { boardNo } = useParams();
     const [values, setValues] = useState({
@@ -27,7 +23,7 @@ function BoardReplyPage() {
     },[boardNo]);
 
     const getReplyData = async (boardNo) => {
-        await customAxios.get(`${board_default}reply/${boardNo}`)
+        await boardAxios.get(`reply/${boardNo}`)
             .then(res => {
                 setReplyValues({
                     boardGroupNo: res.data.content.boardGroupNo,
@@ -36,14 +32,14 @@ function BoardReplyPage() {
                 });
             })
             .catch(err => {
-                console.error('reply get axios error : ', err);
+                axiosErrorHandling(err);
             })
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        await customAxios.post(`${board_default}reply`,
+        await boardAxios.post(`reply`,
             {
                 boardTitle: values.title,
                 boardContent: values.content,
@@ -52,12 +48,11 @@ function BoardReplyPage() {
                 boardUpperNo: replyValues.boardUpperNo,
             })
             .then(res => {
-                console.log('reply insert res : ', res);
                 const insertNo = res.data;
                 navigate(`/board/${insertNo}`);
             })
             .catch(err => {
-                console.error('reply insert axios error : ', err);
+                axiosErrorHandling(err);
             })
     }
 

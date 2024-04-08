@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+
 import TextBoardListItem from "./TextBoardListItem";
 import Button from "../ui/Button";
 

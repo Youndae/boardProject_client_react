@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {customImageAxios} from "../../../modules/customAxios";
 import styled from "styled-components";
+
+import {axiosErrorHandling, imageDisplayAxios} from "../../../modules/customAxios";
 
 const ImgWrapper = styled.img`
     width: 300px;
@@ -10,14 +11,12 @@ function ImageOldPreviewForm(props) {
     const { imageData, handleOnClick } = props;
     const [imgSrc, setImgSrc] = useState(null);
 
-    console.log('imageData : ', imageData);
-
     useEffect(() => {
         displayImage(imageData.imageName);
     }, [imageData]);
 
     const displayImage = async (imageName) => {
-        await customImageAxios.get(`display/${imageName}`)
+        await imageDisplayAxios.get(`display/${imageName}`)
             .then(res => {
                 const myFile = new File([res.data], 'imageName')
                 const reader = new FileReader()
@@ -28,7 +27,7 @@ function ImageOldPreviewForm(props) {
                 reader.readAsDataURL(myFile)
             })
             .catch(err => {
-                console.error('image display error : ', err);
+                axiosErrorHandling(err);
             })
     }
 

@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
-import {customAxios} from "../../../modules/customAxios";
 
 import BoardDetailForm from "./BoardDetailForm";
 import CommentList from "../../list/CommentList";
 
+import {axiosErrorHandling, boardAxios} from "../../../modules/customAxios";
 
-const board_default = process.env.REACT_APP_API_BOARD;
 function BoardDetailPage () {
     const { boardNo } = useParams();
     const [data, setData] = useState([]);
@@ -17,14 +16,15 @@ function BoardDetailPage () {
     }, []);
 
     const boardDetailData = async (boardNo) => {
-        try{
-            const response = await customAxios.get(`${board_default}${boardNo}`);
 
-            setData(response.data.content);
-            setUid(response.data.userStatus.uid);
-        }catch (err) {
-            console.error('detail error : ', err);
-        }
+        await boardAxios.get(`${boardNo}`)
+            .then(res => {
+                setData(res.data.content);
+                setUid(res.data.userStatus.uid);
+            })
+            .catch(err => {
+                axiosErrorHandling(err);
+            });
     }
 
     return (

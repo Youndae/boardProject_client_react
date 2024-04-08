@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Button from "./Button";
-import {handleSearchBtnOnClick} from "../../modules/pagingModule";
 import {useNavigate} from "react-router-dom";
+
+import {handleSearchBtnOnClick} from "../../modules/pagingModule";
 
 function Search(props) {
     const { keyword, searchType } = props;
@@ -11,36 +12,23 @@ function Search(props) {
     })
     const navigate = useNavigate();
 
-    const searchOption = [];
-    searchOption.push(
-        <option value={'t'}>제목</option>
-    );
-    searchOption.push(
-        <option value={'c'}>내용</option>
-    );
-    searchOption.push(
-        <option value={'u'}>작성자</option>
-    );
-    searchOption.push(
-        <option value={'tc'}>제목+내용</option>
-    );
-
-    switch (values.searchType) {
-        case 't':
-            searchOption[0] = <option value={'t'} selected={true}>제목</option>
-            break;
-        case 'c':
-            searchOption[1] = <option value={'c'} selected={true}>내용</option>
-            break;
-        case 'u':
-            searchOption[2] = <option value={'u'} selected={true}>작성자</option>
-            break;
-        case 'tc':
-            searchOption[3] = <option value={'tc'} selected={true}>제목+내용</option>
-            break;
-        default:
-            break;
-    }
+    const searchOptionArray = [];
+    searchOptionArray.push({
+        value: 't',
+        text: '제목',
+    })
+    searchOptionArray.push({
+        value: 'c',
+        text: '내용',
+    })
+    searchOptionArray.push({
+        value: 'u',
+        text: '작성자',
+    })
+    searchOptionArray.push({
+        value: 'tc',
+        text: '제목+내용',
+    })
 
     const handleOnChange = (e) => {
         setValues({
@@ -53,11 +41,17 @@ function Search(props) {
         handleSearchBtnOnClick(navigate, values.keyword, values.searchType);
     }
 
-
     return (
         <div className="search">
-            <select className="searchType" name={'searchType'} onChange={handleOnChange}>
-                {searchOption}
+            <select className="searchType" name={'searchType'} onChange={handleOnChange} value={values.searchType}>
+                {searchOptionArray.map((option, index) => {
+                    return(
+                        <SearchOption
+                            key={index}
+                            option={option}
+                        />
+                    )
+                })}
             </select>
             <input type={'text'} value={values.keyword} name={'keyword'} onChange={handleOnChange}/>
             <Button
@@ -65,6 +59,14 @@ function Search(props) {
                 onClick={handleBtnOnClick}
             />
         </div>
+    )
+}
+
+function SearchOption(props) {
+    const { option } = props;
+
+    return (
+        <option value={option.value}>{option.text}</option>
     )
 }
 

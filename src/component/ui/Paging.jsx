@@ -10,39 +10,25 @@ const PagingliWrapper = styled.li`
 `
 
 function Paging(props) {
-    // prev, next 값(boolean)
-    // startPage, endPage = 버튼 출력할 시작, 끝 범위
-    // activeNo = 현재 보고 있는 페이지 번호
-    // noOnClick = 페이지 번호 클릭 이벤트
-    // prevOnClick, nextOnClick = Prev, next 클릭 이벤트
     const { pagingData, pageNumOnClick, prevOnClick, nextOnClick } = props;
 
     let prevElem = null;
     let nextElem = null;
     const pagingNumberArr = [];
-    const defaultPagingClassName = 'pagingNumber';
-    const activePagingClassName = defaultPagingClassName + ' active';
 
     if(pagingData.endPage !== 1){
         for(let i = pagingData.startPage; i <= pagingData.endPage; i++){
-            let pagingNoElem = <PagingliWrapper>
-                <PagingButton
-                    btnText={i}
-                    className={defaultPagingClassName}
-                    onClick={pageNumOnClick}
-                />
-            </PagingliWrapper>;
+            let pagingClassName = 'pagingNumber';
 
             if(i === Number(pagingData.activeNo))
-                pagingNoElem = <PagingliWrapper>
-                    <PagingButton
-                        btnText={i}
-                        className={activePagingClassName}
-                        onClick={pageNumOnClick}
-                    />
-                </PagingliWrapper>;
+                pagingClassName = pagingClassName + ' active';
 
-            pagingNumberArr.push(pagingNoElem);
+            const body = {
+                pageNum: i,
+                className: pagingClassName,
+            }
+
+            pagingNumberArr.push(body);
         }
     }
 
@@ -69,12 +55,33 @@ function Paging(props) {
         <div className="paging">
             <ul>
                 {prevElem}
-                {pagingNumberArr}
+                {pagingNumberArr.map((pagingNum, index) => {
+                    return(
+                        <PagingNumber
+                            key={index}
+                            pagingNumberData={pagingNum}
+                            btnOnClick={pageNumOnClick}
+                        />
+                    )
+                })}
                 {nextElem}
             </ul>
         </div>
     )
+}
 
+function PagingNumber(props) {
+    const { pagingNumberData, btnOnClick } = props;
+
+    return (
+        <PagingliWrapper>
+            <PagingButton
+                btnText={pagingNumberData.pageNum}
+                className={pagingNumberData.className}
+                onClick={btnOnClick}
+            />
+        </PagingliWrapper>
+    )
 }
 
 export default Paging;

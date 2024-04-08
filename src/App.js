@@ -1,8 +1,8 @@
 import React from 'react';
 import {
   BrowserRouter,
-    Routes,
-    Route
+  Routes,
+  Route
 } from "react-router-dom";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,6 +19,7 @@ import ImageUpdatePage from "./component/page/imageboard/ImageUpdatePage";
 import ImageDetailPage from "./component/page/imageboard/ImageDetailPage";
 import Join from './component/page/member/Join';
 import Login from './component/page/member/Login';
+import ErrorPage from "./component/page/error/ErrorPage";
 
 
 function App() {
@@ -30,19 +31,20 @@ function App() {
         <Route path="?pageNum=:pageNum" element={<BoardPage />}/>
         <Route path="?keyword=:keyword&searchType=:searchType" element={<BoardPage />}/>
         <Route path="?keyword=:keyword&searchType=:searchType?pageNum=:pageNum" element={<BoardPage />}/>
-        <Route path="image" element={<ImagePage />}/>
-        <Route path="image?pageNum=:pageNum" element={<ImagePage />}/>
-        <Route path="image?keyword=:keyword&searchType=:searchType" element={<ImagePage />}/>
-        <Route path="image?keyword=:keyword&searchType=:searchType?pageNum=:pageNum" element={<ImagePage />}/>
         <Route path="board/:boardNo" element={<BoardDetailPage />} />
         <Route path="board/insert" element={<BoardWritePage />} />
         <Route path="board/update/:boardNo" element={<BoardUpdatePage />} />
         <Route path="board/reply/:boardNo" element={<BoardReplyPage />} />
+        <Route path="image" element={<ImagePage />}/>
+        <Route path="image?pageNum=:pageNum" element={<ImagePage />}/>
+        <Route path="image?keyword=:keyword&searchType=:searchType" element={<ImagePage />}/>
+        <Route path="image?keyword=:keyword&searchType=:searchType?pageNum=:pageNum" element={<ImagePage />}/>
         <Route path="image/insert" element={<ImageWritePage />} />
         <Route path="image/update/:imageNo" element={<ImageUpdatePage />}/>
         <Route path="image/:imageNo" element={<ImageDetailPage />}/>
-        <Route path="join" element={<Join />}/>
-        <Route path="login" element={<Login />}/>
+        <Route path="join" element={<Join />} />
+        <Route path="login" element={<Login />} />
+        <Route path="/*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>
   );

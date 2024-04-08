@@ -13,7 +13,6 @@ const PagingActiveButtonWrapper = styled.button`
     color: black;
 `
 
-
 function PagingButton(props) {
     const {btnText, onClick, className} = props;
 

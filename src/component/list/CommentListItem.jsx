@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import dayjs from "dayjs";
 import styled from "styled-components";
-import {customAxios} from "../../modules/customAxios";
 
 import Button from "../ui/Button";
+
+import {axiosErrorHandling, commentAxios} from "../../modules/customAxios";
 
 const CommentWriterWrpper = styled.span`
     $.comment_userId {
@@ -40,8 +41,6 @@ const CommentContentWrapper = styled.p`
     }
 `;
 
-const comment_default = process.env.REACT_APP_API_COMMENT;
-
 function CommentListItem(props) {
     const {comment, uid, handleInputSuccess, boardNo, imageNo} = props;
     const [replyStatus, setReplyStatus] = useState(false);
@@ -63,7 +62,7 @@ function CommentListItem(props) {
 
     const handleReplyOnClick = async (e) => {
 
-        await customAxios.post(`${comment_default}reply`, {
+        await commentAxios.post(`reply`, {
             commentContent: replyInputValue,
             commentGroupNo: comment.commentGroupNo,
             commentIndent: comment.commentIndent,
@@ -76,7 +75,7 @@ function CommentListItem(props) {
             handleInputSuccess();
         })
         .catch(err => {
-            console.log("commentReply error : ", err);
+            axiosErrorHandling(err);
         })
     }
 
@@ -91,12 +90,12 @@ function CommentListItem(props) {
     const deleteOnClick = async (e) => {
         const deleteCommentNo = e.target.value;
 
-        await customAxios.delete(`${comment_default}${deleteCommentNo}`)
+        await commentAxios.delete(`${deleteCommentNo}`)
             .then(res => {
                 handleInputSuccess();
             })
             .catch(err => {
-                console.log('delete error : ', err);
+                axiosErrorHandling(err);
             });
     }
 
@@ -145,15 +144,17 @@ function CommentListItem(props) {
     return (
         <div className="comment-box">
             <table className="table table-hover">
-                <tr>
-                    <td>
-                        <CommentWriterWrpper className={`comment_userId${commentIndentClassName}`}>{writer}</CommentWriterWrpper>
-                        <CommentDateWrapper className={`comment_date${commentIndentClassName}`}>{dayjs(comment.commentDate).format('YYYY-MM-DD')}</CommentDateWrapper>
-                        <CommentContentWrapper className={`comment_content${commentIndentClassName}`}>{comment.commentContent}</CommentContentWrapper>
-                        {replyButton}
-                        {deleteButton}
-                    </td>
-                </tr>
+                <tbody>
+                    <tr>
+                        <td>
+                            <CommentWriterWrpper className={`comment_userId${commentIndentClassName}`}>{writer}</CommentWriterWrpper>
+                            <CommentDateWrapper className={`comment_date${commentIndentClassName}`}>{dayjs(comment.commentDate).format('YYYY-MM-DD')}</CommentDateWrapper>
+                            <CommentContentWrapper className={`comment_content${commentIndentClassName}`}>{comment.commentContent}</CommentContentWrapper>
+                            {replyButton}
+                            {deleteButton}
+                        </td>
+                    </tr>
+                </tbody>
             </table>
             {replyInput}
         </div>

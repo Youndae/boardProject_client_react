@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
-import {customImageAxios} from "../../modules/customAxios";
+
+import {axiosErrorHandling, imageDisplayAxios} from "../../modules/customAxios";
 
 const Image = styled.img`
     width: 300px;
     height: 300px;
 `;
-
 
 function ImageBoardListItem(props) {
 
@@ -18,7 +18,7 @@ function ImageBoardListItem(props) {
     }, [image]);
 
     const getImageData = async (imageName) => {
-        await customImageAxios.get(`display/${imageName}`)
+        await imageDisplayAxios.get(`display/${imageName}`)
             .then(res => {
                 const myFile = new File([res.data], 'imageName')
                 const reader = new FileReader()
@@ -29,7 +29,7 @@ function ImageBoardListItem(props) {
                 reader.readAsDataURL(myFile)
             })
             .catch(err => {
-                console.error('imageData axios error : ', err);
+                axiosErrorHandling(err);
             })
     }
 

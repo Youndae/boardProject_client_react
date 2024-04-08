@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { customImageAxios } from "../../../modules/customAxios";
+import {axiosErrorHandling, imageDisplayAxios} from "../../../modules/customAxios";
 
 const Image = styled.img`
     width: 300px;
@@ -16,7 +16,7 @@ function ImageDetailForm(props) {
     }, [imageData]);
 
     const getImageData = async (imageName) => {
-        await customImageAxios.get(`display/${imageName}`)
+        await imageDisplayAxios.get(`display/${imageName}`)
             .then(res => {
                 const myFile = new File([res.data], 'imageName')
                 const reader = new FileReader()
@@ -27,7 +27,7 @@ function ImageDetailForm(props) {
                 reader.readAsDataURL(myFile)
             })
             .catch(err => {
-                console.error('imageData axios error : ', err);
+                axiosErrorHandling(err);
             })
     }
 
