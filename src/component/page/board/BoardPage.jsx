@@ -51,9 +51,6 @@ function BoardPage() {
         <div className="container">
             <TextBoardList
                 data={data}
-                onClickItem={(item) => {
-                    navigate(`/board/${item.boardNo}`)
-                }}
                 onClickBtn={() => {
                     navigate('/board/insert')
                 }}

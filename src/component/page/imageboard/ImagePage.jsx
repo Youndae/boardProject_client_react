@@ -51,9 +51,6 @@ function ImagePage() {
         <div className={'container'}>
             <ImageBoardList
                 image={data}
-                onClickItem={(item) => {
-                    navigate(`/image/${item.imageNo}`)
-                }}
                 onClickBtn={() => {
                     navigate('/image/insert')
                 }}

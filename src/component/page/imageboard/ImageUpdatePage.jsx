@@ -6,10 +6,14 @@ import Button from "../../ui/Button";
 import ImageOldPreviewForm from "./ImageOldPreviewForm";
 import ImageNewPreviewForm from "./ImageNewPreviewForm";
 
-import { imageValidation } from "../../../modules/imageModule";
+import {
+    setZeroToPreviewNo,
+    imageInputChange,
+    deleteNewImagePreview,
+    setFormData
+} from "../../../modules/imageModule";
 import {axiosErrorHandling, imageAxios, imageInsertAxios} from "../../../modules/customAxios";
 
-let previewNo = 0;
 function ImageUpdatePage () {
     const { imageNo } = useParams();
     const [values, setValues] = useState({
@@ -25,7 +29,7 @@ function ImageUpdatePage () {
         getImageBoardData(imageNo);
         getImageData(imageNo);
 
-        previewNo = 0;
+        setZeroToPreviewNo();
     }, [imageNo]);
 
     //게시글 title, content 데이터 조회
@@ -54,23 +58,21 @@ function ImageUpdatePage () {
     }
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        let formData = new FormData();
+        let formData = setFormData(values, files);
+        deleteImageName.forEach(
+            fileName => formData.append('deleteFiles', fileName)
+        );
 
-        formData.append('imageTitle', values.title);
-        formData.append('imageContent', values.content);
-        files.forEach(file => formData.append('files', file.file));
-        deleteImageName.forEach(fileName => formData.append('deleteFiles', fileName));
-
-        imageInsertAxios.patch(`${imageNo}`, formData)
-            .then(res => {
-                navigate(`/image/${res.data}`);
-            })
-            .catch(err => {
-                axiosErrorHandling(err);
-            })
+        await imageInsertAxios.patch(`${imageNo}`, formData)
+                    .then(res => {
+                        navigate(`/image/${res.data}`);
+                    })
+                    .catch(err => {
+                        axiosErrorHandling(err);
+                    })
     }
 
 
@@ -101,35 +103,17 @@ function ImageUpdatePage () {
 
     //이미지 추가
     const handleImageInputChange = (e) => {
-        const validationResult = imageValidation(e);
+        const inputResultArray = imageInputChange(e, files);
 
-        if(validationResult){
-            const fileList = e.target.files;
-            let fileArr = [...files];
-
-            for(let i = 0; i < fileList.length; i++){
-                fileArr.push({
-                    fileNo: ++previewNo,
-                    file: fileList[i],
-                });
-            }
-
-            setFiles(fileArr);
-        }
+        if(inputResultArray !== null)
+            setFiles(inputResultArray);
     }
 
     //새로운 이미지 삭제
     const handleImageDelete = (e) => {
-        const deleteNo = e.target.getAttribute('value');
-        let arr = [...files];
-        const delObject = arr.find(function(item) {
-            return item.fileNo === deleteNo;
-        })
+        const deleteResultArray = deleteNewImagePreview(e, files);
 
-        const delIndex = arr.indexOf(delObject);
-        arr.splice(delIndex, 1);
-
-        setFiles(arr);
+        setFiles(deleteResultArray);
     }
 
 

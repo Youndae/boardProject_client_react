@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 
 import BoardWriteForm from "../board/BoardWriteForm";
 import Button from "../../ui/Button"
 import ImageNewPreviewForm from "./ImageNewPreviewForm";
 
-import { imageValidation } from "../../../modules/imageModule";
+import {
+    setZeroToPreviewNo,
+    imageInputChange,
+    deleteNewImagePreview,
+    setFormData
+} from "../../../modules/imageModule";
 import {axiosErrorHandling, imageInsertAxios, checkUserStatus} from "../../../modules/customAxios";
 
-let previewNo = 0;
 function ImageWritePage() {
     const [values, setValues] = useState({
        title: "",
@@ -37,25 +41,22 @@ function ImageWritePage() {
                 }
             })
 
-        previewNo = 0;
+        setZeroToPreviewNo();
     }, []);
 
-    function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        let formData = new FormData();
+        const formData = setFormData(values, files);
 
-        formData.append('imageTitle', values.title);
-        formData.append('imageContent', values.content);
-        files.forEach(file => formData.append('files', file.file));
-
-        imageInsertAxios.post('', formData)
-            .then(res => {
-                navigate(`/image/${res.data}`);
-            })
-            .catch(err => {
-                axiosErrorHandling(err);
-            })
+        await imageInsertAxios.post('', formData)
+                .then(res => {
+                    console.log('image insert res.data : ', res.data);
+                    navigate(`/image/${res.data}`);
+                })
+                .catch(err => {
+                    axiosErrorHandling(err);
+                })
     }
 
     //title, content input 입력
@@ -66,37 +67,19 @@ function ImageWritePage() {
         })
     };
 
-    //이미지 추가
+   //이미지 추가
     const handleImageInputChange = (e) => {
-        const validationResult = imageValidation(e);
+        const inputResultArray = imageInputChange(e, files);
 
-        if(validationResult){
-            const fileList = e.target.files;
-            let fileArr = [...files];
-
-            for(let i = 0; i < fileList.length; i++){
-                fileArr.push({
-                    fileNo: ++previewNo,
-                    file: fileList[i],
-                });
-            }
-
-            setFiles(fileArr);
-        }
+        if(inputResultArray !== null)
+            setFiles(inputResultArray);
     }
 
     //미리보기 삭제
     const deletePreview = (e) => {
-        const deleteNo = e.target.getAttribute('value');
-        let arr = [...files];
-        const delObject = arr.find(function(item) {
-            return item.fileNo === deleteNo;
-        })
+        const deleteResultArray = deleteNewImagePreview(e, files);
 
-        const delIndex = arr.indexOf(delObject);
-        arr.splice(delIndex, 1);
-
-        setFiles(arr);
+        setFiles(deleteResultArray);
     }
 
     if(userStatus) {

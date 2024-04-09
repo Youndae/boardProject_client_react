@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
+import {Link} from "react-router-dom";
 
 const ImgWrapper = styled.img`
     width: 300px;
@@ -21,7 +22,7 @@ function ImageNewPreviewForm(props) {
         <div className="preview-box">
             <ImgWrapper src={imgSrc} alt={""} className={"thumbnail"}/>
             <p>{files.file.name}</p>
-            <a href={'#'} onClick={handleOnClick} value={files.fileNo}>삭제</a>
+            <Link onClick={handleOnClick} value={files.fileNo}>삭제</Link>
         </div>
     )
 }

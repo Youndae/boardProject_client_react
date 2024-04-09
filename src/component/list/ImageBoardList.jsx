@@ -4,7 +4,7 @@ import ImageBoardListItem from './ImageBoardListItem';
 import Button from '../ui/Button';
 
 function ImageBoardList(props) {
-    const { image, onClickItem, onClickBtn } = props;
+    const { image, onClickBtn } = props;
 
     return (
         <div className="container">
@@ -22,9 +22,6 @@ function ImageBoardList(props) {
                         <ImageBoardListItem
                             key={image.imageNo}
                             image={image}
-                            onClick={() => {
-                                onClickItem(image)
-                            }}
                         />
                     )
                 })}

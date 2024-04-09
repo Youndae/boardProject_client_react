@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 
-import {memberAxios, axiosErrorHandling} from "../../modules/customAxios";
+import {memberAxios, axiosErrorHandling, checkUserStatus} from "../../modules/customAxios";
 
 const Wrapper = styled.div`
     li {
@@ -20,17 +20,15 @@ function NavBar () {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        checkLoggedIn();
-    }, []);
-
-    const checkLoggedIn = async () => {
-        await memberAxios.get(`check-login`)
+        checkUserStatus()
             .then(res => {
-                let dispatchType;
+                console.log('checkUser res : ', res);
                 const status = res.data.loginStatus;
-                if(status == true)
+                let dispatchType;
+
+                if(status)
                     dispatchType = 'isLoggedIn';
-                else if(status == false)
+                else
                     dispatchType = 'isLoggedOut';
 
                 const body = {
@@ -38,14 +36,10 @@ function NavBar () {
                 }
 
                 dispatch(body);
-            })
-            .catch(err => {
-                axiosErrorHandling(err);
-            })
-    };
+            });
+    }, []);
 
-    const LogoutSubmit = (e) => {
-        console.log('logout Submit');
+    const LogoutSubmit = () => {
         const body = {
             type: 'isLoggedOut',
         }
@@ -87,15 +81,15 @@ function NavBar () {
                     <div className="collapse navbar-collapse">
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item active">
-                                <a className="nav-link" onClick={() => navigate("/image")}>
+                                <Link to={'/image'} className="nav-link">
                                     사진
                                     <span className="sr-only"></span>
-                                </a>
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" onClick={() => navigate("/")}>
+                                <Link to={'/'} className="nav-link">
                                     게시판
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                         <div className="form-inline my-2 my-md-0 login">
@@ -109,7 +103,5 @@ function NavBar () {
         </Wrapper>
     );
 }
-
-
 
 export default NavBar;

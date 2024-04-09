@@ -4,7 +4,7 @@ import TextBoardListItem from "./TextBoardListItem";
 import Button from "../ui/Button";
 
 function TextBoardList(props) {
-    const { data, onClickItem, onClickBtn } = props;
+    const { data, onClickBtn } = props;
 
     return (
         <div>
@@ -31,9 +31,6 @@ function TextBoardList(props) {
                             <TextBoardListItem
                                 key={data.boardNo}
                                 board={data}
-                                onClick={() => {
-                                    onClickItem(data);
-                                }}
                             />
                         )
                     })}

@@ -4,10 +4,10 @@ import dayjs from "dayjs";
 
 
 import Button from "../../ui/Button";
-import ImageDetailForm from "./ImageDetailForm";
 import CommentList from "../../list/CommentList";
 
 import {imageAxios, axiosErrorHandling} from "../../../modules/customAxios";
+import ImageDisplayElem from "../../ui/ImageDisplayElem";
 
 function ImageDetailPage(props) {
     const { imageNo } = useParams();
@@ -76,10 +76,12 @@ function ImageDetailPage(props) {
                 <div className="mt-4">
                     {imageData.map((imageData, index) => {
                         return (
-                            <ImageDetailForm
-                                key={index}
-                                imageData={imageData}
-                            />
+                            <div key={index} className="mb-4">
+                                <ImageDisplayElem
+                                    imageClassName={'imageData'}
+                                    imageName={imageData.imageName}
+                                />
+                            </div>
                         )
                     })}
                 </div>

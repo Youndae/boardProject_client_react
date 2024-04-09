@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import dayjs from "dayjs";
+import {Link} from "react-router-dom";
 
 const TitleWrapper = styled.span`
     &.title_indent_1 {
@@ -19,7 +20,7 @@ const TitleWrapper = styled.span`
 
 
 function TextBoardListItem(props) {
-    const {board, onClick} = props;
+    const { board } = props;
 
     let title_indent;
     if(board.boardIndent === 0)
@@ -38,7 +39,7 @@ function TextBoardListItem(props) {
             <td>{board.boardNo}</td>
             <td>
                 <TitleWrapper className={title_indent}>
-                    <a onClick={onClick}>{board.boardTitle}</a>
+                    <Link to={`board/${board.boardNo}`}>{board.boardTitle}</Link>
                 </TitleWrapper>
             </td>
             <td>{board.userId}</td>

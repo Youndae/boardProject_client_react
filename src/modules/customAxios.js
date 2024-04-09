@@ -68,8 +68,6 @@ export const checkUserStatus = async () => {
         });
 }
 
-
-
 //error handling
 export const axiosErrorHandling = (err) => {
     const err_code = err.response.status;

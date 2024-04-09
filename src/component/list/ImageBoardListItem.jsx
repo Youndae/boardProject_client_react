@@ -1,44 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import styled from 'styled-components';
+import React from 'react';
 
-import {axiosErrorHandling, imageDisplayAxios} from "../../modules/customAxios";
-
-const Image = styled.img`
-    width: 300px;
-    height: 300px;
-`;
+import ImageDisplayElem from "../ui/ImageDisplayElem";
+import {Link} from "react-router-dom";
 
 function ImageBoardListItem(props) {
-
-    const {image, onClick} = props;
-    const [imageSrc, setImageSrc] = useState('');
-
-    useEffect(() => {
-        getImageData(image.imageName);
-    }, [image]);
-
-    const getImageData = async (imageName) => {
-        await imageDisplayAxios.get(`display/${imageName}`)
-            .then(res => {
-                const myFile = new File([res.data], 'imageName')
-                const reader = new FileReader()
-                reader.onload = ev => {
-                    const previewImage = String(ev.target?.result)
-                    setImageSrc(previewImage)
-                }
-                reader.readAsDataURL(myFile)
-            })
-            .catch(err => {
-                axiosErrorHandling(err);
-            })
-    }
+    const { image } = props;
 
     return (
         <div className="col-md-4">
-            <a onClick={onClick}>
-                <Image className="imageData" src={imageSrc}/>
+            <Link to={`/image/${image.imageNo}`}>
+                <ImageDisplayElem
+                    imageClassName={'imageData'}
+                    imageName={image.imageName}
+                />
                 <p>{image.imageTitle}</p>
-            </a>
+            </Link>
         </div>
     );
 }
