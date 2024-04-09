@@ -22,7 +22,6 @@ function NavBar () {
     useEffect(() => {
         checkUserStatus()
             .then(res => {
-                console.log('checkUser res : ', res);
                 const status = res.data.loginStatus;
                 let dispatchType;
 
@@ -47,7 +46,7 @@ function NavBar () {
         dispatch(body);
 
         memberAxios.post(`logout`)
-            .then(res => {
+            .then(() => {
                 navigate('/');
             })
             .catch(err => {

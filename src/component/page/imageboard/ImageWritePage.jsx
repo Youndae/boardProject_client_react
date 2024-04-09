@@ -80,6 +80,7 @@ function ImageWritePage() {
         const deleteResultArray = deleteNewImagePreview(e, files);
 
         setFiles(deleteResultArray);
+
     }
 
     if(userStatus) {

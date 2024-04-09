@@ -36,10 +36,10 @@ export const imageInputChange = (e, files) => {
 }
 
 export const deleteNewImagePreview = (e, files) => {
-    const deleteNo = e.target.getAttribute('value');
+    const deleteNo = Number(e.target.getAttribute('value'));
     let arr = [...files];
     const delObject = arr.find(function (item) {
-        return item.fileNo === Number(deleteNo);
+        return item.fileNo === deleteNo;
     });
 
     const delIndex = arr.indexOf(delObject);

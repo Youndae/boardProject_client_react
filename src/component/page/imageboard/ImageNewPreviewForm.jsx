@@ -11,12 +11,13 @@ function ImageNewPreviewForm(props) {
     const [imgSrc, setImgSrc] = useState('');
 
     useEffect(() => {
-        const reader = new FileReader();
-        reader.onload = image => {
-            setImgSrc(String(image.target.result));
-        }
-        reader.readAsDataURL(files.file);
-    })
+        const url = window
+                        .URL
+                        .createObjectURL(
+                            files.file
+                        );
+        setImgSrc(url);
+    }, [files])
 
     return (
         <div className="preview-box">

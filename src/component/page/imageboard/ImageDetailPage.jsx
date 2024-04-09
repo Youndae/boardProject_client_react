@@ -33,6 +33,16 @@ function ImageDetailPage(props) {
             })
     }
 
+    const handleDeletePost = async () => {
+        await imageAxios.delete(`/${imageNo}`)
+            .then(() => {
+                navigate('/image');
+            })
+            .catch(err => {
+                axiosErrorHandling(err);
+            })
+    }
+
     const writer = imageInfo.userId;
     let modifyBtn = null;
     let deleteBtn = null;
@@ -46,9 +56,7 @@ function ImageDetailPage(props) {
 
         deleteBtn = <Button
                         btnText="삭제"
-                        onClick={() => {
-                            navigate(`/image/delete/${imageNo}`)
-                        }}
+                        onClick={handleDeletePost}
                     />;
     }
 

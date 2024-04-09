@@ -81,6 +81,8 @@ function ImageUpdatePage () {
         const deleteImageStep = Number(e.target.getAttribute('value'));
         const imageDataArr = [...imageDataValue];
         const deleteObject = imageDataArr.find(function(item) {
+            console.log('fileNo type : ', typeof item.imageStep);
+            console.log('deleteNo type : ', typeof deleteImageStep);
             return item.imageStep === deleteImageStep;
         });
 
