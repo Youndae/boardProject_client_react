@@ -61,6 +61,13 @@ export const memberAxios = axios.create({
     withCredentials: true,
 })
 
+export const checkUserStatus = async () => {
+    return await memberAxios.get(`check-login`)
+        .catch(err => {
+            axiosErrorHandling(err);
+        });
+}
+
 
 
 //error handling
@@ -76,11 +83,9 @@ export const axiosErrorHandling = (err) => {
         window.location.href = '/login';
     }else if(err_code >= 400 && err_code < 500){
         //4xx error
-        console.log('axios error code is 4xx');
         alert('문제가 발생했습니다.\n문제가 계속된다면 관리자에게 문의해주세요');
     }else if(err_code >= 500 && err_code < 600){
         //5xx error
-        console.log('axios error code is 5xx');
         alert('문제가 발생했습니다.\n문제가 계속된다면 관리자에게 문의해주세요');
     }
 }

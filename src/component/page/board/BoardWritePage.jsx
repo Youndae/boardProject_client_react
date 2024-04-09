@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import {axiosErrorHandling, boardAxios, memberAxios} from "../../../modules/customAxios";
+import {axiosErrorHandling, boardAxios, checkUserStatus} from "../../../modules/customAxios";
 
 import BoardWriteForm from './BoardWriteForm';
 import Button from "../../ui/Button";
@@ -11,29 +11,27 @@ function BoardWritePage () {
         title: "",
         content: "",
     });
+    const [userStatus, setUserStatus] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        checkUserStatus();
-    }, []);
-
-    const checkUserStatus = async () => {
-        await memberAxios.get(`check-login`)
+        checkUserStatus()
             .then(res => {
+                console.log('checkUser res : ', res);
                 const status = res.data.loginStatus;
-                if(status === false){
+
+                if(status){
+                    setUserStatus(true);
+                }else {
                     const body = {
                         type: 'isLoggedOut',
                     }
                     dispatch(body);
                     window.location.href = '/login';
                 }
-            })
-            .catch(err => {
-                axiosErrorHandling(err);
-            })
-    }
+            });
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -58,16 +56,18 @@ function BoardWritePage () {
         })
     };
 
-    return (
-        <div className="container">
-            <form onSubmit={handleSubmit}>
-                <BoardWriteForm values={values} handleChange={handleChange} />
-                <Button
-                    btnText="등록"
-                />
-            </form>
-        </div>
-    );
+    if(userStatus) {
+        return (
+            <div className="container">
+                <form onSubmit={handleSubmit}>
+                    <BoardWriteForm values={values} handleChange={handleChange} />
+                    <Button
+                        btnText="등록"
+                    />
+                </form>
+            </div>
+        );
+    }
 }
 
 export default BoardWritePage;

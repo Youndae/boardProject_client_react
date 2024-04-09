@@ -7,10 +7,7 @@ import Button from "../../ui/Button"
 import ImageNewPreviewForm from "./ImageNewPreviewForm";
 
 import { imageValidation } from "../../../modules/imageModule";
-import {axiosErrorHandling, imageInsertAxios, memberAxios} from "../../../modules/customAxios";
-
-
-
+import {axiosErrorHandling, imageInsertAxios, checkUserStatus} from "../../../modules/customAxios";
 
 let previewNo = 0;
 function ImageWritePage() {
@@ -19,21 +16,19 @@ function ImageWritePage() {
        content: "",
     });
     const [files, setFiles] = useState([]);
+    const [userStatus, setUserStatus] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
 
     useEffect(() => {
-        checkUserStatus();
-
-        previewNo = 0;
-    }, []);
-
-    const checkUserStatus = async () => {
-        await memberAxios.get(`check-login`)
+        checkUserStatus()
             .then(res => {
                 const status = res.data.loginStatus;
-                if(status === false){
+
+                if(status) {
+                    setUserStatus(true);
+                }else {
                     const body = {
                         type: 'isLoggedOut',
                     }
@@ -41,10 +36,9 @@ function ImageWritePage() {
                     window.location.href = '/login';
                 }
             })
-            .catch(err => {
-                axiosErrorHandling(err);
-            })
-    }
+
+        previewNo = 0;
+    }, []);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -105,39 +99,41 @@ function ImageWritePage() {
         setFiles(arr);
     }
 
-    return (
-        <div className="container">
-            <div className="wrapper">
-                <div className="header">
-                    <h1>사진첨부</h1>
-                </div>
-                <div className="body">
-                    <form onSubmit={handleSubmit}>
-                        <BoardWriteForm values={values} handleChange={handleChange}/>
-                        <div className="attach">
-                            <input type={"file"} onChange={handleImageInputChange} multiple/>
-                        </div>
-                        <div className="content" id="preview">
-                            {files.map((files, index) => {
-                                return (
-                                    <ImageNewPreviewForm
-                                        key={index}
-                                        files={files}
-                                        handleOnClick={deletePreview}
-                                    />
-                                )
-                            })}
-                        </div>
-                        <div className="footer">
-                            <Button
-                                btnText={"등록"}
-                            />
-                        </div>
-                    </form>
+    if(userStatus) {
+        return (
+            <div className="container">
+                <div className="wrapper">
+                    <div className="header">
+                        <h1>사진첨부</h1>
+                    </div>
+                    <div className="body">
+                        <form onSubmit={handleSubmit}>
+                            <BoardWriteForm values={values} handleChange={handleChange}/>
+                            <div className="attach">
+                                <input type={"file"} onChange={handleImageInputChange} multiple/>
+                            </div>
+                            <div className="content" id="preview">
+                                {files.map((files, index) => {
+                                    return (
+                                        <ImageNewPreviewForm
+                                            key={index}
+                                            files={files}
+                                            handleOnClick={deletePreview}
+                                        />
+                                    )
+                                })}
+                            </div>
+                            <div className="footer">
+                                <Button
+                                    btnText={"등록"}
+                                />
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default ImageWritePage;
