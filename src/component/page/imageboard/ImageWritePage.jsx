@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useSelector} from "react-redux";
 
 import BoardWriteForm from "../board/BoardWriteForm";
 import Button from "../../ui/Button"
@@ -12,7 +12,7 @@ import {
     deleteNewImagePreview,
     setFormData
 } from "../../../modules/imageModule";
-import {axiosErrorHandling, imageInsertAxios, checkUserStatus} from "../../../modules/customAxios";
+import {axiosErrorHandling, imageInsertAxios} from "../../../modules/customAxios";
 
 function ImageWritePage() {
     const [values, setValues] = useState({
@@ -21,28 +21,18 @@ function ImageWritePage() {
     });
     const [files, setFiles] = useState([]);
     const [userStatus, setUserStatus] = useState(null);
+    const loginStatus = useSelector(state => state.user);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
 
     useEffect(() => {
-        checkUserStatus()
-            .then(res => {
-                const status = res.data.loginStatus;
-
-                if(status) {
-                    setUserStatus(true);
-                }else {
-                    const body = {
-                        type: 'isLoggedOut',
-                    }
-                    dispatch(body);
-                    window.location.href = '/login';
-                }
-            })
+        if(loginStatus === 'loggedIn') {
+            setUserStatus(true);
+        }else if(loginStatus === 'loggedOut')
+            navigate('/login');
 
         setZeroToPreviewNo();
-    }, []);
+    }, [loginStatus]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

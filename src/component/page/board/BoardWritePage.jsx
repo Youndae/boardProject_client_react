@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import {axiosErrorHandling, boardAxios, checkUserStatus} from "../../../modules/customAxios";
+import {axiosErrorHandling, boardAxios} from "../../../modules/customAxios";
 
 import BoardWriteForm from './BoardWriteForm';
 import Button from "../../ui/Button";
@@ -13,25 +13,14 @@ function BoardWritePage () {
     });
     const [userStatus, setUserStatus] = useState(null);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const loginStatus = useSelector(state => state.user);
 
     useEffect(() => {
-        checkUserStatus()
-            .then(res => {
-                console.log('checkUser res : ', res);
-                const status = res.data.loginStatus;
-
-                if(status){
-                    setUserStatus(true);
-                }else {
-                    const body = {
-                        type: 'isLoggedOut',
-                    }
-                    dispatch(body);
-                    window.location.href = '/login';
-                }
-            });
-    }, []);
+        if(loginStatus === 'loggedIn')
+            setUserStatus(true);
+        else if(loginStatus === 'loggedOut')
+            navigate('/login');
+    }, [loginStatus]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
