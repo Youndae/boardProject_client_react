@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import {useNavigate, useSearchParams, useLocation} from "react-router-dom";
+import React, { useState } from 'react';
+import {useNavigate, useLocation} from "react-router-dom";
 import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
-import reactReferer from 'react-referer';
+import {useDispatch} from "react-redux";
 
 import Button from "../../ui/Button";
 
 import {memberAxios, axiosErrorHandling} from "../../../modules/customAxios";
+
+const OAuthBtn = styled.img`
+    width: 200px;
+`
+
+const OAuthDiv = styled.div`
+    margin-top: 20px;
+`
 
 function Login() {
     const [values, setValues] = useState({
@@ -14,13 +21,7 @@ function Login() {
         userPw: "",
     });
 
-    const [params] = useSearchParams();
-    console.log('params : {}', params);
-    const referer = reactReferer.referer();
-    console.log('referer : {}', referer);
-
     const { state } = useLocation();
-    console.log('state : {}', state);
 
     /*
         id : id 미입력
@@ -138,20 +139,26 @@ function Login() {
                         }}
                     />
                 </div>
-                <div>
-                    <Button
-                        btnText={"googleLogin"}
-                        onClick={googleLogin}
-                    />
-                    <Button
-                        btnText={"naverLogin"}
-                        onClick={naverLogin}
-                    />
-                    <Button
-                        btnText={"kakaoLogin"}
-                        onClick={kakaoLogin}
-                    />
-                </div>
+                <OAuthDiv className={'oAuth2'}>
+                    <div className="oAuth2-google">
+                        <label htmlFor={'oauth-google'}>
+                            <OAuthBtn src={`${process.env.PUBLIC_URL}/img/web_light_sq_ctn@1x.png`}/>
+                        </label>
+                    </div>
+                    <div className="oAuth2-naver">
+                        <label htmlFor={'oauth-naver'}>
+                            <OAuthBtn src={`${process.env.PUBLIC_URL}/img/btnG_official.png`}/>
+                        </label>
+                    </div>
+                    <div className="oAuth2-kakao">
+                        <label htmlFor={'oauth-kakao'}>
+                            <OAuthBtn src={`${process.env.PUBLIC_URL}/img/kakao_login_medium_narrow.png`}/>
+                        </label>
+                    </div>
+                    <button id={'oauth-google'} onClick={googleLogin} style={{display: 'none'}}/>
+                    <button id={'oauth-naver'} onClick={naverLogin} style={{display: 'none'}}/>
+                    <button id={'oauth-kakao'} onClick={kakaoLogin} style={{display: 'none'}}/>
+                </OAuthDiv>
             </div>
         </div>
     )

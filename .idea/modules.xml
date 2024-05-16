@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../boardproject_react.iml" filepath="$PROJECT_DIR$/../boardproject_react.iml" />
+      <module fileurl="file://$PROJECT_DIR$/boardProject_client_react.iml" filepath="$PROJECT_DIR$/boardProject_client_react.iml" />
     </modules>
   </component>
 </project>

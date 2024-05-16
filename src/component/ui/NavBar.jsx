@@ -22,7 +22,7 @@ function NavBar () {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        checkUserStatus()
+       /* checkUserStatus()
             .then(res => {
                 const status = res.data.loginStatus;
                 let dispatchType;
@@ -37,7 +37,7 @@ function NavBar () {
                 }
 
                 dispatch(body);
-            });
+            });*/
     }, []);
 
     const LogoutSubmit = () => {
