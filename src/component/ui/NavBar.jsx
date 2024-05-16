@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 
 import {memberAxios, axiosErrorHandling, checkUserStatus} from "../../modules/customAxios";
+import {handleLocationPathToLogin} from "../../modules/loginModule";
 
 const Wrapper = styled.div`
     li {
@@ -18,6 +19,7 @@ function NavBar () {
     const loginState = useSelector((state) => state.user);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { pathname } = useLocation();
 
     useEffect(() => {
         checkUserStatus()
@@ -53,6 +55,10 @@ function NavBar () {
                 axiosErrorHandling(err);
             })
 
+    }
+
+    const handleLogin = () => {
+        handleLocationPathToLogin(pathname, navigate);
     }
 
     function LoggedInState(props) {
@@ -93,7 +99,7 @@ function NavBar () {
                         </ul>
                         <div className="form-inline my-2 my-md-0 login">
                             <LoggedInState
-                                onClickLogin={() => {navigate('/login')}}
+                                onClickLogin={handleLogin}
                             />
                         </div>
                     </div>

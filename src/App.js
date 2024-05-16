@@ -20,7 +20,9 @@ import ImageDetailPage from "./component/page/imageboard/ImageDetailPage";
 import Join from './component/page/member/Join';
 import Login from './component/page/member/Login';
 import ErrorPage from "./component/page/error/ErrorPage";
-
+import OAuthSuccess from "./component/page/error/OAuthSuccess";
+import JoinOAuth from "./component/page/member/JoinOAuth";
+import ModifyProfile from "./component/page/member/ModifyProfile";
 
 function App() {
   return (
@@ -30,7 +32,7 @@ function App() {
         <Route index element={<BoardPage />} />
         <Route path="?pageNum=:pageNum" element={<BoardPage />}/>
         <Route path="?keyword=:keyword&searchType=:searchType" element={<BoardPage />}/>
-        <Route path="?keyword=:keyword&searchType=:searchType?pageNum=:pageNum" element={<BoardPage />}/>
+        <Route path="?keyword=:keyword&searchType=:searchType&pageNum=:pageNum" element={<BoardPage />}/>
         <Route path="board/:boardNo" element={<BoardDetailPage />} />
         <Route path="board/insert" element={<BoardWritePage />} />
         <Route path="board/update/:boardNo" element={<BoardUpdatePage />} />
@@ -43,7 +45,11 @@ function App() {
         <Route path="image/update/:imageNo" element={<ImageUpdatePage />}/>
         <Route path="image/:imageNo" element={<ImageDetailPage />}/>
         <Route path="join" element={<Join />} />
+        <Route path="join/profile" element={<JoinOAuth />} />
         <Route path="login" element={<Login />} />
+        <Route path="login?redirect=:redirect" element={<Login />} />
+        <Route path="profile" element={<ModifyProfile />} />
+        <Route path="OAuth" element={<OAuthSuccess />} />
         <Route path="/*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>

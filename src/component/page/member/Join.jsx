@@ -4,8 +4,13 @@ import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 
 import Button from "../../ui/Button";
-import {axiosErrorHandling, memberAxios} from "../../../modules/customAxios";
+import {axiosErrorHandling, memberAxios, memberProfileAxios} from "../../../modules/customAxios";
+import {imageValidation} from "../../../modules/imageModule";
 
+import Overlap from "../../ui/Overlap";
+import MemberProfileImage from "../../ui/MemberProfileImage";
+import MemberNickname from "../../ui/MemberNickname";
+import {setJoinFormData} from "../../../modules/loginModule";
 /**
  * @state
  * 1. idCheck
@@ -40,24 +45,64 @@ function Join () {
         userPw: "",
         checkPassword: "",
         userName: "",
+        nickname: '',
+        email: '',
+        profileThumbnail: '',
     });
+
+
+    const [profileImg, setProfileImg] = useState('');
+    const [profileStatus, setProfileStatus] = useState('default');
     const [idCheck, setIdCheck] = useState('');
     const [pwCheck, setPwCheck] = useState('');
     const [verifyPw, setVerifyPw] = useState('');
     const [nameCheck, setNameCheck] = useState('');
+    const [nicknameCheck, setNicknameCheck] = useState('');
+    const [emailCheck, setEmailCheck] = useState('');
+    const [emailProvider, setEmailProvider] = useState('naver');
+    const [emailSuffix, setEmailSuffix] = useState(`${process.env.REACT_APP_EMAIL_SUFFIX_NAVER}`);
+
     //아이디 체크와 비밀번호 체크가 정상인지
     const [checkInfo, setCheckInfo] = useState({
         idCheckInfo: false,
         pwCheckInfo: false,
+        nicknameCheckInfo: false,
     });
+
+
     const idElem = useRef(null);
     const pwElem = useRef(null);
     const pwCheckElem = useRef(null);
     const userNameElem = useRef(null);
+    const nicknameElem = useRef(null);
+    const emailElem = useRef(null);
+
     const navigate = useNavigate();
 
     const idPattern = /^[A-Za-z0-9]{5,15}$/;
     const pwPattern = /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-])(?=.*[0-9]).{8,16}$/;
+    const emailPattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
+    const handleEmailSelectOnChange = (e) => {
+        const val = e.target.value;
+        console.log('select val : ', val);
+        setEmailProvider(val);
+        let suffix = '';
+
+        if(val === 'naver')
+            suffix = process.env.REACT_APP_EMAIL_SUFFIX_NAVER;
+        else if(val === 'daum')
+            suffix = process.env.REACT_APP_EMAIL_SUFFIX_DAUM;
+
+        setEmailSuffix(suffix);
+    }
+
+    const handleEmailSuffixInputChange = (e) => {
+        const val = e.target.value;
+
+        setEmailSuffix(val);
+    }
+
 
 
     const handleCheckId = () => {
@@ -89,7 +134,38 @@ function Join () {
         }
     }
 
+    const handleCheckNickname = () => {
+        if(userData.nickname === '')
+            setNicknameCheck('empty');
+        else{
+            memberAxios.get(`check-nickname?nickname=${userData.nickname}`)
+                .then(res => {
+                    if(res.data === 1) {
+                        setCheckInfo({
+                            ...checkInfo,
+                            'nicknameCheckInfo': false,
+                        });
+                        setNicknameCheck('duplication');
+                    }else {
+                        setCheckInfo({
+                            ...checkInfo,
+                            'nicknameCheckInfo': true,
+                        });
+                        setNicknameCheck('valid');
+                    }
+                })
+                .catch(() => {
+                    setNicknameCheck('err');
+                })
+        }
+    }
+
     const handleJoin = () => {
+
+        const userEmail = userData.email + '@' + emailSuffix;
+
+        console.log('handle submit email : ', userEmail);
+
         if(!checkInfo.idCheckInfo){
             //아이디 중복 체크 요청 overlap 출력 및 focus
             setIdCheck('notDuplicateCheck');
@@ -101,14 +177,28 @@ function Join () {
             //사용자 이름 입력 요청 overlap 출력 및 focus
             setNameCheck('empty');
             userNameElem.current.focus();
+        }else if(userData.nickname === ''){
+            setNicknameCheck('empty');
+            nicknameElem.current.focus();
+        }else if(!checkInfo.nicknameCheckInfo) {
+            setNicknameCheck('notDuplicateCheck');
+            nicknameElem.current.focus();
+        }else if(!emailPattern.test(userEmail)) {
+            setEmailCheck('invalid');
+            emailElem.current.focus();
         }else {
-            const body = {
+            /*const body = {
                 userId: userData.userId,
                 userPw: userData.userPw,
                 userName: userData.userName,
-            }
+                nickname: userData.nickname,
+                email: userEmail,
+                profileThumbnail: userData.profileThumbnail,
+            }*/
 
-            memberAxios.post(`join`, body)
+            const formData = setJoinFormData(userData, userEmail);
+
+            memberProfileAxios.post('join', formData)
                 .then(() => {
                     alert('회원가입이 완료되었습니다.');
                     navigate('/login');
@@ -116,6 +206,16 @@ function Join () {
                 .catch(err => {
                     axiosErrorHandling(err);
                 })
+
+
+            /*memberAxios.post(`join`, body)
+                .then(() => {
+                    alert('회원가입이 완료되었습니다.');
+                    navigate('/login');
+                })
+                .catch(err => {
+                    axiosErrorHandling(err);
+                })*/
         }
     }
 
@@ -175,8 +275,39 @@ function Join () {
             const nameValue = e.target.value;
             if(nameValue !== '')
                 setNameCheck('');
+        }else if(targetName === 'nickname') {
+
+            setCheckInfo({
+                ...checkInfo,
+                nicknameCheckInfo: false,
+            })
         }
     };
+
+    const handleProfileOnChange = (e) => {
+        if(e.target.files.length != 0){
+            if(imageValidation(e)){
+                const file = e.target.files[0];
+                setUserData({
+                    ...userData,
+                    profileThumbnail: file,
+                });
+
+                setProfileImg(file);
+            }
+            setProfileStatus('file');
+        }
+    }
+
+    const handleProfileDeleteOnClick = () => {
+        window.URL.revokeObjectURL(profileImg);
+        setUserData({
+            ...userData,
+            profileThumbnail: '',
+        });
+        setProfileImg('');
+        setProfileStatus('default');
+    }
 
     return (
         <div className="container">
@@ -213,23 +344,62 @@ function Join () {
                             checkValue={nameCheck}
                         />
                     </div>
+                    <MemberNickname
+                        handleChange={handleChange}
+                        nicknameElem={nicknameElem}
+                        handleCheckNickname={handleCheckNickname}
+                        nicknameCheck={nicknameCheck}
+                    />
+                    <div className="mb-2">
+                        <label className="mr-5 mb-2">이메일</label>
+                        <input type={'text'} name={'email'} placeholder={'이메일'} onChange={handleChange} ref={emailElem} />
+                        <span>@</span>
+                        <EmailProvider providerStatus={emailProvider} handleInputChange={handleEmailSuffixInputChange}/>
+                        <select className={'email-select'} name={'email-suffix'} onChange={handleEmailSelectOnChange} defaultValue={'naver'}>
+                            <option value={'naver'}>네이버</option>
+                            <option value={'daum'}>다음</option>
+                            <option value={''}>직접입력</option>
+                        </select>
+                        <EmailOverlap
+                            checkValue={emailCheck}
+                        />
+                    </div>
+                    <MemberProfileImage
+                        profileImg={profileImg}
+                        profileStatus={profileStatus}
+                        handleProfileDeleteOnClick={handleProfileDeleteOnClick}
+                        handleProfileOnChange={handleProfileOnChange}
+                    />
                     <Button btnText={"가입"} onClick={handleJoin}/>
             </div>
         </div>
     )
 }
 
-const OverlapDiv = styled.div`
-    color: red;
-`
+function EmailProvider (props) {
+    const { providerStatus, handleInputChange } = props;
 
-function DefaultOverlap (props) {
-    const { overlapText } = props;
+    if(providerStatus === ''){
+        return (
+            <input type={'text'} name={'email-suffix-input'} onChange={handleInputChange}/>
+        )
+    }else{
+        return null;
+    }
+}
+
+function EmailOverlap (props) {
+    const { checkValue } = props;
+
+    let overlapText = '';
+
+    if(checkValue === 'invalid')
+        overlapText = '유효하지 않은 이메일 주소입니다.';
 
     return (
-        <OverlapDiv>
-            {overlapText}
-        </OverlapDiv>
+        <Overlap
+            overlapText={overlapText}
+        />
     )
 }
 
@@ -252,7 +422,7 @@ function IdOverlap(props) {
 
 
     return (
-        <DefaultOverlap
+        <Overlap
             overlapText={overlapText}
         />
     )
@@ -272,7 +442,7 @@ function PwOverlap(props) {
         overlapText = '사용가능한 비밀번호입니다';
 
     return (
-        <DefaultOverlap
+        <Overlap
             overlapText={overlapText}
         />
     )
@@ -286,7 +456,7 @@ function CheckPwOverlap(props) {
         overlapText = '비밀번호가 일치하지 않습니다.';
 
     return (
-        <DefaultOverlap
+        <Overlap
             overlapText={overlapText}
         />
     )
@@ -300,7 +470,7 @@ function UserNameOverlap(props) {
         overlapText = '이름을 입력해주세요';
 
     return (
-        <DefaultOverlap
+        <Overlap
             overlapText={overlapText}
         />
     )

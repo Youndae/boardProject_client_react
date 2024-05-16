@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import {useSelector} from "react-redux";
 
 import BoardWriteForm from "../board/BoardWriteForm";
@@ -13,6 +13,7 @@ import {
     setFormData
 } from "../../../modules/imageModule";
 import {axiosErrorHandling, imageInsertAxios} from "../../../modules/customAxios";
+import {handleLocationPathToLogin} from "../../../modules/loginModule";
 
 function ImageWritePage() {
     const [values, setValues] = useState({
@@ -24,12 +25,13 @@ function ImageWritePage() {
     const loginStatus = useSelector(state => state.user);
     const navigate = useNavigate();
 
+    const { pathname } = useLocation();
 
     useEffect(() => {
         if(loginStatus === 'loggedIn') {
             setUserStatus(true);
         }else if(loginStatus === 'loggedOut')
-            navigate('/login');
+            handleLocationPathToLogin(pathname, navigate);
 
         setZeroToPreviewNo();
     }, [loginStatus]);

@@ -9,10 +9,11 @@ import { CookiesProvider } from 'react-cookie';
 
 import dayjs from "dayjs";
 import isLeapYear from 'dayjs/plugin/isLeapYear';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/ko';
 import rootReducer from "./modules";
 
-dayjs.extend(isLeapYear);
+dayjs.extend(isLeapYear, relativeTime);
 dayjs.locale('ko');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

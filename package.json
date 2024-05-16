@@ -15,6 +15,7 @@
     "react-cookie": "^7.1.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.1.0",
+    "react-referer": "^1.0.1",
     "react-router-dom": "^6.22.1",
     "react-scripts": "5.0.1",
     "redux": "^5.0.1",
@@ -22,7 +23,7 @@
     "styled-components": "^6.1.8",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "http://localhost:9096",
+  "proxy": "http://localhost:8080",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

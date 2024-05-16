@@ -14,10 +14,10 @@ function ImageDisplayElem(props) {
         await imageDisplayAxios.get(`display/${imageName}`)
             .then(res => {
                 const url = window
-                                .URL
-                                .createObjectURL(
-                                    new Blob([res.data], { type: res.headers['content-type']})
-                                );
+                    .URL
+                    .createObjectURL(
+                        new Blob([res.data], { type: res.headers['content-type']})
+                    );
                 setImageSrc(url);
             })
             .catch(err => {

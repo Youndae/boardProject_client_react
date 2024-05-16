@@ -21,6 +21,10 @@ const default_header = {
     'Content-Type' : 'application/json',
 }
 
+const multipart_header = {
+    'Content-Type' : 'multipart/form-data',
+}
+
 export const boardAxios = axios.create({
     baseURL: `${default_url}${board_default}`,
     headers: default_header,
@@ -43,9 +47,7 @@ export const imageDisplayAxios = axios.create({
 
 export const imageInsertAxios = axios.create({
     baseURL: `${default_url}${image_default}`,
-    headers: {
-        'Content-Type' : 'multipart/form-data',
-    },
+    headers: multipart_header,
     withCredentials: true,
 })
 
@@ -56,6 +58,18 @@ export const commentAxios = axios.create({
 })
 
 export const memberAxios = axios.create({
+    baseURL: `${default_url}${member_default}`,
+    headers: default_header,
+    withCredentials: true,
+})
+
+export const memberProfileAxios = axios.create({
+    baseURL: `${default_url}${member_default}`,
+    headers: multipart_header,
+    withCredentials: true,
+})
+
+export const memberProfileGetAxios = axios.create({
     baseURL: `${default_url}${member_default}`,
     headers: default_header,
     withCredentials: true,
@@ -74,6 +88,7 @@ export const axiosErrorHandling = (err) => {
 
     if(err_code === 403){
         //accessDenied
+        alert('res status : 403');
         window.location.href = '/error';
     }else if(err_code === 800){
         //tokenStealing

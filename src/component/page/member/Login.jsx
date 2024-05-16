@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams, useLocation} from "react-router-dom";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
+import reactReferer from 'react-referer';
 
 import Button from "../../ui/Button";
 
@@ -13,6 +14,14 @@ function Login() {
         userPw: "",
     });
 
+    const [params] = useSearchParams();
+    console.log('params : {}', params);
+    const referer = reactReferer.referer();
+    console.log('referer : {}', referer);
+
+    const { state } = useLocation();
+    console.log('state : {}', state);
+
     /*
         id : id 미입력
         pw : 비밀번호 미입력
@@ -22,6 +31,21 @@ function Login() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const googleLogin = (e) => {
+        window.sessionStorage.setItem('prev', state);
+        window.location.href = 'http://localhost:8080/oauth2/authorization/google'
+    }
+
+    const naverLogin = (e) => {
+        window.sessionStorage.setItem('prev', state);
+        window.location.href = 'http://localhost:8080/oauth2/authorization/naver'
+    }
+
+    const kakaoLogin = (e) => {
+        window.sessionStorage.setItem('prev', state);
+        window.location.href = 'http://localhost:8080/oauth2/authorization/kakao'
+    }
 
     const handleChange = (e) => {
         setValues({
@@ -37,9 +61,9 @@ function Login() {
 
     const handleSubmit = async (e) => {
 
-        if(values.userId == '') {
+        if(values.userId === '') {
             setResponseStatus('id');
-        }else if(values.userPw == '') {
+        }else if(values.userPw === '') {
             setResponseStatus('pw');
         }else{
             //axios.post(login)
@@ -60,7 +84,7 @@ function Login() {
 
                     dispatch(body);
 
-                    navigate('/');
+                    navigate(state);
                 })
                 .catch(err => {
                     const statusCode = err.response.status;
@@ -112,6 +136,20 @@ function Login() {
                         onClick={() => {
                             navigate('/join')
                         }}
+                    />
+                </div>
+                <div>
+                    <Button
+                        btnText={"googleLogin"}
+                        onClick={googleLogin}
+                    />
+                    <Button
+                        btnText={"naverLogin"}
+                        onClick={naverLogin}
+                    />
+                    <Button
+                        btnText={"kakaoLogin"}
+                        onClick={kakaoLogin}
                     />
                 </div>
             </div>
