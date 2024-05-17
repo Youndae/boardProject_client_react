@@ -22,7 +22,7 @@ function NavBar () {
     const { pathname } = useLocation();
 
     useEffect(() => {
-       /* checkUserStatus()
+        checkUserStatus()
             .then(res => {
                 const status = res.data.loginStatus;
                 let dispatchType;
@@ -37,7 +37,7 @@ function NavBar () {
                 }
 
                 dispatch(body);
-            });*/
+            });
     }, []);
 
     const LogoutSubmit = () => {
@@ -73,7 +73,12 @@ function NavBar () {
         }else if(loginState === 'loggedIn') {
             return (
                 <ul>
-                    <button className="user_status_btn" onClick={LogoutSubmit}>로그아웃</button>
+                    <li>
+                        <button className="user_status_btn" onClick={() => navigate('/profile')}>정보수정</button>
+                    </li>
+                    <li>
+                        <button className="user_status_btn" onClick={LogoutSubmit}>로그아웃</button>
+                    </li>
                 </ul>
             )
         }

@@ -42,7 +42,7 @@ function TextBoardListItem(props) {
                     <Link to={`board/${board.boardNo}`}>{board.boardTitle}</Link>
                 </TitleWrapper>
             </td>
-            <td>{board.userId}</td>
+            <td>{board.nickname}</td>
             <td>{dayjs(board.boardDate).format('YYYY-MM-DD')}</td>
         </tr>
     );

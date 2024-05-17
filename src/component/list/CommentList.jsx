@@ -41,6 +41,7 @@ function CommentList(props) {
             }
         })
             .then(res => {
+                console.log('commentList res : ', res);
                 setCommentValue(res.data.content);
                 setUid(res.data.userStatus.uid);
 
@@ -71,18 +72,20 @@ function CommentList(props) {
     const commentBtnOnClick = async (e) => {
         e.preventDefault();
 
-        await commentAxios.post(``, {
-            commentContent: inputValue,
-            boardNo: boardNo,
-            imageNo: imageNo,
-        })
-            .then(res => {
-                setInputValue('');
-                handleInputSuccessRerender();
+        if(inputValue !== ''){
+            await commentAxios.post(``, {
+                commentContent: inputValue,
+                boardNo: boardNo,
+                imageNo: imageNo,
             })
-            .catch(err => {
-                axiosErrorHandling(err);
-            })
+                .then(res => {
+                    setInputValue('');
+                    handleInputSuccessRerender();
+                })
+                .catch(err => {
+                    axiosErrorHandling(err);
+                })
+        }
     }
 
     const handleInputSuccessRerender = () => {

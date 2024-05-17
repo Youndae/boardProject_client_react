@@ -11,6 +11,8 @@ import Overlap from "../../ui/Overlap";
 import MemberProfileImage from "../../ui/MemberProfileImage";
 import MemberNickname from "../../ui/MemberNickname";
 import {setJoinFormData} from "../../../modules/loginModule";
+
+import './join.css';
 /**
  * @state
  * 1. idCheck
@@ -61,6 +63,7 @@ function Join () {
     const [emailCheck, setEmailCheck] = useState('');
     const [emailProvider, setEmailProvider] = useState('naver');
     const [emailSuffix, setEmailSuffix] = useState(`${process.env.REACT_APP_EMAIL_SUFFIX_NAVER}`);
+    console.log('eamil suffix : ', emailSuffix);
 
     //아이디 체크와 비밀번호 체크가 정상인지
     const [checkInfo, setCheckInfo] = useState({
@@ -313,7 +316,7 @@ function Join () {
         <div className="container">
             <div className="layer">
                     <div className="mb-2">
-                        <label>아이디</label>
+                        <label><span className={'join_essential'}>*</span>아이디</label>
                         <input type={"text"} name={"userId"} placeholder={"아이디"} onChange={handleChange} ref={idElem}/>
                         <Button
                             btnText={"중복체크"}
@@ -324,34 +327,35 @@ function Join () {
                         />
                     </div>
                     <div className="mb-2">
-                        <label className="mr-3 mb-2">비밀번호</label>
+                        <label className="mr-3 mb-2"><span className={'join_essential'}>*</span>비밀번호</label>
                         <input type={"password"} name={"userPw"} placeholder={"비밀번호"} onChange={handleChange} ref={pwElem}/>
                         <PwOverlap
                             checkValue={pwCheck}
                         />
                     </div>
                     <div className="mb-2">
-                        <label className="mr-3 mb-2">비밀번호 확인</label>
+                        <label className="mr-3 mb-2"><span className={'join_essential'}>*</span>비밀번호 확인</label>
                         <input type={"password"} name={"checkPassword"} placeholder={"비밀번호"} onChange={handleChange} ref={pwCheckElem}/>
                         <CheckPwOverlap
                             checkValue={verifyPw}
                         />
                     </div>
                     <div className="mb-2">
-                        <label className="mr-5 mb-2">이름</label>
+                        <label className="mr-5 mb-2"><span className={'join_essential'}>*</span>이름</label>
                         <input type={"text"} name={"userName"} placeholder={"이름"} onChange={handleChange} ref={userNameElem}/>
                         <UserNameOverlap
                             checkValue={nameCheck}
                         />
                     </div>
                     <MemberNickname
+                        nickname={userData}
                         handleChange={handleChange}
                         nicknameElem={nicknameElem}
                         handleCheckNickname={handleCheckNickname}
                         nicknameCheck={nicknameCheck}
                     />
                     <div className="mb-2">
-                        <label className="mr-5 mb-2">이메일</label>
+                        <label className="mr-5 mb-2"><span className={'join_essential'}>*</span>이메일</label>
                         <input type={'text'} name={'email'} placeholder={'이메일'} onChange={handleChange} ref={emailElem} />
                         <span>@</span>
                         <EmailProvider providerStatus={emailProvider} handleInputChange={handleEmailSuffixInputChange}/>
@@ -434,12 +438,12 @@ function PwOverlap(props) {
     let overlapText = '';
     if(checkValue === 'empty')
         overlapText = '비밀번호를 입력하세요';
-    else if(checkValue === 'short')
-        overlapText = '비밀번호는 8자리 이상이어야 합니다'
     else if(checkValue === 'invalid')
         overlapText = '비밀번호는 영어, 특수문자, 숫자가 포함되어야 합니다.';
     else if(checkValue === 'valid')
         overlapText = '사용가능한 비밀번호입니다';
+    else if(checkValue === 'short')
+        overlapText = '비밀번호는 8자리 이상이어야 합니다'
 
     return (
         <Overlap

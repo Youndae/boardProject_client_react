@@ -20,7 +20,7 @@ function BoardDetailForm (props) {
             })
     }
 
-    const writer = boardInfo.userId;
+    const writer = boardInfo.nickname;
     let replyBtn = null;
     let modifyBtn = null;
     let deleteBtn = null;

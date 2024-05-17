@@ -46,6 +46,7 @@ function CommentListItem(props) {
     const [replyStatus, setReplyStatus] = useState(false);
     const [replyInputValue, setReplyInputValue] = useState('');
 
+    console.log('comment nickname : ', comment);
     let commentIndentClassName = '';
     let writer = '';
     if (comment.commentIndent == 1)
@@ -58,7 +59,7 @@ function CommentListItem(props) {
         commentIndentClassName = ' indent_size_4';
 
     if (comment.commentContent !== "삭제된 댓글입니다.")
-        writer = comment.userId;
+        writer = comment.nickname;
 
     const handleReplyOnClick = async (e) => {
 

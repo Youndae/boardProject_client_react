@@ -24,6 +24,7 @@ function ImageDetailPage(props) {
     const getImageDetailData = async (imageNo) => {
         await imageAxios.get(`${imageNo}`)
             .then(res => {
+                console.log('image DetailPage res : ', res);
                 setImageInfo(res.data.content);
                 setImageData(res.data.content.imageData);
                 setUid(res.data.userStatus.uid);
@@ -43,7 +44,7 @@ function ImageDetailPage(props) {
             })
     }
 
-    const writer = imageInfo.userId;
+    const writer = imageInfo.nickname;
     let modifyBtn = null;
     let deleteBtn = null;
     if(uid === writer){
@@ -73,7 +74,7 @@ function ImageDetailPage(props) {
             </div>
             <div className="form-group">
                 <label>작성자</label>
-                <p>{imageInfo.userId}</p>
+                <p>{imageInfo.nickname}</p>
             </div>
             <div className="form-group">
                 <label>작성일</label>

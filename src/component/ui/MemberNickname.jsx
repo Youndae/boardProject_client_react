@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from "./Button";
 import Overlap from "./Overlap";
+import '../page/member/join.css';
 
 function MemberNickname(props) {
     const { nickname, handleChange, nicknameElem, handleCheckNickname, nicknameCheck } = props;
