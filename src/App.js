@@ -47,9 +47,8 @@ function App() {
         <Route path="join" element={<Join />} />
         <Route path="join/profile" element={<JoinOAuth />} />
         <Route path="login" element={<Login />} />
-        <Route path="login?redirect=:redirect" element={<Login />} />
-        <Route path="profile" element={<ModifyProfile />} />
-        <Route path="OAuth" element={<OAuthSuccess />} />
+        <Route path="member/profile" element={<ModifyProfile />} />
+        <Route path="member/oAuth" element={<OAuthSuccess />} />
         <Route path="/*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>
