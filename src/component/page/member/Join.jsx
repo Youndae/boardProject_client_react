@@ -117,7 +117,8 @@ function Join () {
         }else {
             memberAxios.get(`check-id?userId=${userData.userId}`)
                 .then(res => {
-                    if(res.data === 1){
+
+                    if(res.data === "DUPLICATED"){
                         setCheckInfo({
                             ...checkInfo,
                             'idCheckInfo': false,
@@ -143,7 +144,8 @@ function Join () {
         else{
             memberAxios.get(`check-nickname?nickname=${userData.nickname}`)
                 .then(res => {
-                    if(res.data === 1) {
+
+                    if(res.data === "DUPLICATED") {
                         setCheckInfo({
                             ...checkInfo,
                             'nicknameCheckInfo': false,
@@ -190,15 +192,6 @@ function Join () {
             setEmailCheck('invalid');
             emailElem.current.focus();
         }else {
-            /*const body = {
-                userId: userData.userId,
-                userPw: userData.userPw,
-                userName: userData.userName,
-                nickname: userData.nickname,
-                email: userEmail,
-                profileThumbnail: userData.profileThumbnail,
-            }*/
-
             const formData = setJoinFormData(userData, userEmail);
 
             memberProfileAxios.post('join', formData)
@@ -209,16 +202,6 @@ function Join () {
                 .catch(err => {
                     axiosErrorHandling(err);
                 })
-
-
-            /*memberAxios.post(`join`, body)
-                .then(() => {
-                    alert('회원가입이 완료되었습니다.');
-                    navigate('/login');
-                })
-                .catch(err => {
-                    axiosErrorHandling(err);
-                })*/
         }
     }
 

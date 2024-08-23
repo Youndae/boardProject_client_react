@@ -40,7 +40,7 @@ function App() {
         <Route path="image" element={<ImagePage />}/>
         <Route path="image?pageNum=:pageNum" element={<ImagePage />}/>
         <Route path="image?keyword=:keyword&searchType=:searchType" element={<ImagePage />}/>
-        <Route path="image?keyword=:keyword&searchType=:searchType?pageNum=:pageNum" element={<ImagePage />}/>
+        <Route path="image?keyword=:keyword&searchType=:searchType&pageNum=:pageNum" element={<ImagePage />}/>
         <Route path="image/insert" element={<ImageWritePage />} />
         <Route path="image/update/:imageNo" element={<ImageUpdatePage />}/>
         <Route path="image/:imageNo" element={<ImageDetailPage />}/>

@@ -16,6 +16,146 @@
 > 5. Redux
 > 6. dayjs
 
+## 프로젝트 설명
+> React로 구현되는 FrontEnd는 어떻게 구성되고, 요청과 응답을 어떻게 주고 받아야 할지 이해하기 위해 학습하고 프로젝트를 진행하게 되었습니다.   
+> 기획에서부터 없었지만 복잡한 이벤트 부분은 따로 고려하지 않았고 기존 있는 기능들에 대한 이벤트 관리는 기존 Spring Project를 진행하며 Template Engine을 사용할때와 같이 여러가지를 고려해 구현하고자 했습니다.   
+> 프론트엔드에서는 복잡한 기능을 구현한 것이 없어 기능 정리에는 컴포넌트 분리 혹은 진행하면서 고민을 많이 했던 부분들 위주로 정리했습니다.
+
+
+## 기능 정리
+
+---
+
+### 컴포넌트 구조 설계
+React를 학습하면서 컴포넌트 구조를 잘 설계하면 개발 시간을 줄일 수 있고 재사용성을 높일 수 있겠다는 생각을 많이 했습니다.   
+기존 진행했던 html 파일들을 보며 컴포넌트를 어떻게 나눌지 고민을 많이 했고 크게 list, page, ui 이렇게 세가지로 분류하게 되었습니다.   
+list는 2개의 게시판을 갖고 각 게시판의 상세 페이지 내부에서는 댓글 리스트가 필요하기 때문에 해당 리스트들에 대한 컴포넌트들을 생성하고 담아두었습니다.   
+page는 내부에서 다시한번 기능별로 분리를 해두었고, Router를 통해 실제 접근하는 최상위 컴포넌트가 대부분입니다.   
+
+각 컴포넌트는 중복될 수 있는 부분들은 컴포넌트를 분리해 해당 컴포넌트를 호출하도록 처리했습니다.   
+한 예시로 게시글 작성 페이지에 나오는 화면 중 제목과 게시글 작성 부분은 BoardWriteForm.jsx라는 컴포넌트로 분리해 각 게시판 작성, 수정 컴포넌트에서 호출해 사용하도록 처리했습니다.   
+
+ui 디렉토리는 버튼, 이미지 출력 폼, 상단 바, 페이징, 페이징 버튼 등의 UI 관련 컴포넌트가 존재합니다.   
+대부분의 페이지에서는 버튼이나 페이지네이션 디자인이 비슷하다는 생각을 했기 때문에 UI 관련된 컴포넌트를 분리하면 더 수월하게 처리할 수 있을 것이라고 생각했습니다.
+
+### 중복 기능 분리
+BoardProject에서는 여러 컴포넌트에서 동일하게 사용되는 기능 혹은 코드들이 존재합니다.   
+대표적인 예로 Axios가 있고 이미지 파일 선택 및 삭제 처리와 업로드를 위한 FormData 생성 처리가 있습니다.   
+이런 기능들은 src.modules 하위에 분리해서 작성해 처리했습니다.   
+
+```javascript
+
+let previewNo = 0;
+
+export const setFormData = (values, files) => {
+    let formData = new FormData();
+
+    formData.append('imageTitle', values.title);
+    formData.append('imageContent', values.content);
+    files.forEach(file => formData.append('files', file.file));
+
+    return formData;
+}
+
+export const setZeroToPreviewNo = () => {
+    previewNo = 0;
+};
+
+export const imageInputChange = (e, files) => {
+    const validationResult = imageValidation(e);
+
+    if(validationResult){
+        const fileList = e.target.files;
+        let fileArr = [...files];
+
+        for(let i = 0; i < fileList.length; i++){
+            fileArr.push({
+                fileNo: ++previewNo,
+                file: fileList[i],
+            })
+        }
+
+        return fileArr;
+    }else {
+        return null;
+    }
+}
+
+export const deleteNewImagePreview = (e, files) => {
+    const deleteNo = Number(e.target.getAttribute('value'));
+    let arr = [...files];
+    const delObject = arr.find(function (item) {
+        return item.fileNo === deleteNo;
+    });
+
+    const delIndex = arr.indexOf(delObject);
+
+    arr.splice(delIndex, 1);
+
+    return arr;
+}
+
+export const imageValidation = (e) => {
+    const uploadFiles = e.target.files;
+    const previewBoxLen = document.getElementsByClassName('preview-box').length;
+
+    if(uploadFiles.length <= (5 - previewBoxLen)){
+        for(let idx = 0; idx < uploadFiles.length; idx++){
+            const fileName = uploadFiles[idx].name;
+            const fileNameExtensionIndex = fileName.lastIndexOf('.') + 1;
+            const fileNameExtension = fileName.toLowerCase().substring(fileNameExtensionIndex, fileName.length);
+
+            if((fileNameExtension === 'jpg') || (fileNameExtension === 'gif')
+                || (fileNameExtension === 'png') || (fileNameExtension === 'jpeg')){
+
+            }else{
+                alert('jpg, gif, png 확장자 파일만 업로드가 가능합니다.');
+                return false;
+            }
+        }
+
+        return true;
+    }else {
+        alert('사진은 5장까지만 업로드가 가능합니다.');
+        return false;
+    }
+}
+
+```
+
+이미지 파일에 대한 처리는 사용자 프로필 수정, 회원가입, 이미지 게시판의 등록 및 수정 페이지에서 사용되기 때문에 분리해서 처리했습니다.   
+추가되는 파일 혹은 삭제되는 파일에 대한 처리를 담당하고 추가 시 파일 확장자명과 개수 제한에 대한 체크를 할 수 있도록 처리했습니다.
+
+## 이미지 출력 처리
+이미지 출력 처리에서는 고민이 많았습니다. 기존 프로젝트에서는 기존 이미지의 경우 img 태그의 src에 파일 요청 경로와 이미지명을 넣어주는 것으로 간단하게 처리할 수 있었습니다.   
+하지만 리액트에서 그렇게 처리했더니 요청 경로와 이미지명을 보여주는 형태가 아닌 base64 형태의 URL로 나오는 것을 확인할 수 있었습니다.   
+그래서 몇몇 사이트를 방문해 확인해보니 이런 값을 갖도록 처리하는 곳이 없었기에 다른 방법을 찾고자 했습니다.   
+
+그렇게 찾아낸 방법은 window.URL.createObjectURL()을 활용하는 방법이었습니다.
+
+```javascript
+const getImageDisplayData = async (imageName) => {
+        await imageDisplayAxios.get(`display/${imageName}`)
+            .then(res => {
+                const url = window
+                    .URL
+                    .createObjectURL(
+                        new Blob([res.data], { type: res.headers['content-type']})
+                    );
+                setImageSrc(url);
+            })
+            .catch(err => {
+                axiosErrorHandling(err);
+            })
+    };
+```
+
+이렇게 createObjectURL을 사용해 처리했을 때 원하던대로 blob:http://localhost:~ 의 형태로 출력되도록 처리할 수 있었습니다.
+이 문제 해결에 대한 정리는 아래 링크의 블로그에 정리해뒀습니다.   
+https://myyoun.tistory.com/227
+
+
+---
 
 ## History
 ### 2024/03/08
@@ -174,3 +314,7 @@
 ### 2024/05/18
 > Spring Application-server 수정하면서 같이 처리되도록 URL 수정.
 >> OAuth2 로그인 성공 시 접근하는 URL와 profile 수정 및 최초 로그인 시 profile 등록 페이지 URL에 대해서만 수정.
+
+
+### 2024/08/23
+> 게시글 post 요청으로 인한 Long 응답을 제외한 나머지 응답 중 Long 타입 반환되던 부분들 String으로 수정.
