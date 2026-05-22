@@ -50,6 +50,9 @@ function UpdateProfile() {
                 email: responseData.mailPrefix,
             });
 
+            if(responseData.profile !== null)
+                setProfileStatus('old');
+
             setEmailProvider(responseData.mailType);
             setEmailSuffix(responseData.mailSuffix);
 
@@ -62,17 +65,19 @@ function UpdateProfile() {
         const validationResult = validateModifyProfile(nicknameCheckInfo, userData, emailSuffix);
 
         if(!validationResult.length) {
-            try {
-                const userEmail = getEmail(userData, emailSuffix);
-                const formData = new FormData();
-                formData.append('nickname', userData.nickname);
-                formData.append('email', userEmail);
-                if(userData.profile)
-                    formData.append('profile', userData.profile);
-                if(deleteProfile)
-                    formData.append('deleteProfile', deleteProfile);
+            const userEmail = getEmail(userData, emailSuffix);
+            const formData = new FormData();
+            formData.append('nickname', userData.nickname);
+            formData.append('email', userEmail);
+            if(userData.profile)
+                formData.append('profile', userData.profile);
+            if(deleteProfile)
+                formData.append('deleteProfile', deleteProfile);
 
+            try {
                 await patchProfile(formData);
+                alert('정보 수정이 완료되었습니다.');
+                navigate('/');
             }catch(err) {
                 console.error('Failed patch profile: ', err);
             }

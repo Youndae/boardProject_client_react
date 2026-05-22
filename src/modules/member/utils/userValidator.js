@@ -17,8 +17,8 @@ export const validateJoin = (checkInfo, userData, emailSuffix) => {
 
 export const validateModifyProfile = (checkInfo, userData, emailSuffix) => {
     const resultArr = [
-        validateNickname(userData, checkInfo),
-        validateEmail(userData, emailSuffix)
+        validateNickname(userData.nickname, checkInfo),
+        validateEmail(userData.email, emailSuffix)
     ];
 
     return resultArr.filter(Boolean);
@@ -116,6 +116,7 @@ const validateNickname = (nickname, checkInfo) => {
             checkValue: INFO_CHECK.NOT_DUPLICATED_CHECK
         }
     }else if(!PATTERNS.NICKNAME.test(nickname)){
+        console.log('pattern fail', nickname);
         return {
             result: false,
             field: 'nickname',

@@ -48,7 +48,8 @@ function Login() {
         else {
             try {
                 const res = await postLogin(values);
-                dispatch(login(res));
+                console.log('res : ', res);
+                dispatch(login(res.data.content));
                 navigate(state);
             }catch(err) {
                 console.error('login error: ', err);

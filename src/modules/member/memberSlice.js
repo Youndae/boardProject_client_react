@@ -13,6 +13,8 @@ const memberSlice = createSlice({
     reducers: {
         login(state, action) {
             const { userId, role } = action.payload;
+            console.log('payload userId: ', userId);
+            console.log('payload role: ', role);
             state.loginStatus = true;
             state.id = userId;
             state.role = role;

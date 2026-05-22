@@ -20,8 +20,8 @@ function BoardUpdatePage() {
                 const res = await getPatchDetail(boardId);
 
                 setValues({
-                    title: res.data.title,
-                    content: res.data.content,
+                    title: res.data.content.title,
+                    content: res.data.content.content,
                 });
             }catch(err) {
                 console.error('Failed get patch board data: ', err);
